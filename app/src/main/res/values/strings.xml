@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">TickDuck</string>
+    <string name="settings">Settings</string>
+    <string name="todayTodos">Today\'s todos</string>
+    <string name="calendar">Calendar</string>
+    <string name="add_todo">Add new Todo</string>
 </resources>
