@@ -39,6 +39,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.fab.setOnClickListener {
+            FragmentManager.currentFragment?.onClickNew()
             Log.d("Log", "New Todo")
         }
     }

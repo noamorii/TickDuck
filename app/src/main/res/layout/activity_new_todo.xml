@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.NewTodoActivity">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="16dp">
+
+            <EditText
+                android:id="@+id/edDescription"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:ems="10"
+                android:gravity="top"
+                android:hint="@string/description_hint"
+                android:inputType="textPersonName"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/edDate"
+                app:layout_constraintStart_toStartOf="@+id/edDate"
+                app:layout_constraintTop_toBottomOf="@+id/edDate" />
+
+            <EditText
+                android:id="@+id/edDate"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="@string/date_hint"
+                android:inputType="date"
+                app:layout_constraintEnd_toEndOf="@+id/edCategory"
+                app:layout_constraintStart_toStartOf="@+id/edCategory"
+                app:layout_constraintTop_toBottomOf="@+id/edCategory" />
+
+            <EditText
+                android:id="@+id/edCategory"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="@string/category_hint"
+                android:inputType="textPersonName"
+                app:layout_constraintEnd_toEndOf="@+id/edTask"
+                app:layout_constraintStart_toStartOf="@+id/edTask"
+                app:layout_constraintTop_toBottomOf="@+id/edTask" />
+
+            <EditText
+                android:id="@+id/edTask"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="@string/title_hint"
+                android:inputType="textPersonName"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+</androidx.constraintlayout.widget.ConstraintLayout>

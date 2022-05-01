@@ -45,6 +45,4 @@ class TodoAdapter : ListAdapter<Todo, TodoAdapter.TaskHolder>(Comparator()) {
             return oldItem == newItem
         }
     }
-
-
 }
