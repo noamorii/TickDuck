@@ -8,6 +8,13 @@
     tools:context=".activities.MainActivity"
     tools:menu="@menu/bottom_menu">
 
+    <FrameLayout
+        android:id="@+id/frame"
+        android:layout_width="match_parent"
+        android:layout_height="674dp">
+
+    </FrameLayout>
+
     <com.google.android.material.bottomappbar.BottomAppBar
         android:id="@+id/bottomAppBar"
         android:layout_width="match_parent"
@@ -25,7 +32,8 @@
             android:layout_height="match_parent"
             app:elevation="0dp"
             android:background="@android:color/transparent"
-            app:menu="@menu/bottom_menu" />
+            app:menu="@menu/bottom_menu"
+            />
 
     </com.google.android.material.bottomappbar.BottomAppBar>
 

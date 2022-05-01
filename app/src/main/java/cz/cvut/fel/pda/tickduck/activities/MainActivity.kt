@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.util.Log
 import cz.cvut.fel.pda.tickduck.R
 import cz.cvut.fel.pda.tickduck.databinding.ActivityMainBinding
+import cz.cvut.fel.pda.tickduck.fragments.FragmentManager
+import cz.cvut.fel.pda.tickduck.fragments.TodoFragment
 
 class MainActivity : AppCompatActivity() {
 
@@ -30,7 +32,7 @@ class MainActivity : AppCompatActivity() {
                     Log.d("Log", "Calendar")
                 }
                 R.id.todayTodos -> {
-                    Log.d("Log", "Todos")
+                    FragmentManager.setFragment(TodoFragment.newInstance(), this)
                 }
             }
             true
