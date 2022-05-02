@@ -19,6 +19,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setNavigationListener()
+        FragmentManager.setFragment(TodoFragment.newInstance(), this)
     }
 
     private fun setNavigationListener() {
