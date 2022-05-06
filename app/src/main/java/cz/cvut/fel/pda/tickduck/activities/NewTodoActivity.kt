@@ -17,7 +17,7 @@ class NewTodoActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityNewTodoBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        actionBarSetReturn()
+        supportActionBar?.setDisplayHomeAsUpEnabled(true) //back
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -28,6 +28,7 @@ class NewTodoActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.id_create) {
             setResult()
+            finish()
         }
 
         if (item.itemId == android.R.id.home) {
@@ -42,18 +43,11 @@ class NewTodoActivity : AppCompatActivity() {
             putExtra("new_todo", Todo(
                 null, binding.edTask.text.toString(),
                 binding.edDescription.text.toString(),
-                1, FlagType.BLUE,
+                1, FlagType.BLUE, //todo
                 null, 1, false
                 )
             )
         }
         setResult(RESULT_OK, intent)
-        finish()
     }
-
-    private fun actionBarSetReturn() {
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-    }
-
-
 }
