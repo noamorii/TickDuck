@@ -17,7 +17,7 @@ import cz.cvut.fel.pda.tickduck.db.MainViewModel
 import cz.cvut.fel.pda.tickduck.db.TodoAdapter
 import cz.cvut.fel.pda.tickduck.model.Todo
 
-class TodoFragment : BaseFragment() {
+class TodoFragment : BaseFragment(), TodoAdapter.Listener {
 
     private lateinit var binding: FragmentTodoBinding
     private lateinit var editLauncher: ActivityResultLauncher<Intent>
@@ -67,12 +67,16 @@ class TodoFragment : BaseFragment() {
 
     private fun initRCView() = with(binding) {
         rcViewTodos.layoutManager = LinearLayoutManager(activity)
-        adapter = TodoAdapter()
+        adapter = TodoAdapter(this@TodoFragment)
         rcViewTodos.adapter = adapter
     }
 
     companion object {
         @JvmStatic
         fun newInstance() = TodoFragment()
+    }
+
+    override fun onClickItem(task: Todo) {
+        mainViewModel.updateTodo(task)
     }
 }

@@ -14,6 +14,10 @@ class MainViewModel(database: MainDB) : ViewModel() {
         dao.insertTodo(todo)
     }
 
+    fun updateTodo(todo: Todo) = viewModelScope.launch {
+        dao.updateTodo(todo)
+    }
+
     class MainViewModelFactory(private val database: MainDB) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             if (modelClass.isAssignableFrom(MainViewModel::class.java)) {

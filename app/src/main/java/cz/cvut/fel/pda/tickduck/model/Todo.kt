@@ -15,5 +15,5 @@ data class Todo(
     @ColumnInfo(name = "flag_type") val flagInfo: FlagType,
     @ColumnInfo(name = "img_name") val imgName: String?, // Bitmap? (?)
     val idCategory: Int,
-    @ColumnInfo(name = "is_completed") val isCompleted: Boolean = false
+    @ColumnInfo(name = "is_completed") var isCompleted: Boolean = false
 ): Serializable
