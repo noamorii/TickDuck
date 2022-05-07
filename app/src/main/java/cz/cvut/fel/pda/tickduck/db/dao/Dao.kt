@@ -1,9 +1,7 @@
 package cz.cvut.fel.pda.tickduck.db.dao
 
+import androidx.room.*
 import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.Query
-import androidx.room.Update
 import cz.cvut.fel.pda.tickduck.model.Category
 import cz.cvut.fel.pda.tickduck.model.Todo
 import kotlinx.coroutines.flow.Flow
@@ -25,4 +23,7 @@ interface Dao {
 
     @Update
     suspend fun updateTodo(todo: Todo)
+
+    @Query ("DELETE FROM todos WHERE id IS :id")
+    suspend fun deleteTodo(id: Int)
 }

@@ -18,6 +18,10 @@ class MainViewModel(database: MainDB) : ViewModel() {
         dao.updateTodo(todo)
     }
 
+    fun deleteTodo(id: Int) = viewModelScope.launch {
+        dao.deleteTodo(id)
+    }
+
     class MainViewModelFactory(private val database: MainDB) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             if (modelClass.isAssignableFrom(MainViewModel::class.java)) {

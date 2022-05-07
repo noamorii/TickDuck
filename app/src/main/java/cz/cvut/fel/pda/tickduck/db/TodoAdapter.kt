@@ -53,5 +53,6 @@ class TodoAdapter(private val listener: Listener) : ListAdapter<Todo, TodoAdapte
 
     interface Listener {
         fun onClickItem(task: Todo)
+        fun deleteTodo(id: Int)
     }
 }
