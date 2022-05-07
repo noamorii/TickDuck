@@ -42,4 +42,5 @@ class MainActivity : AppCompatActivity() {
             Log.d("Log", "New Todo")
         }
     }
+
 }

@@ -10,21 +10,26 @@ import cz.cvut.fel.pda.tickduck.R
 import cz.cvut.fel.pda.tickduck.databinding.TaskBinding
 import cz.cvut.fel.pda.tickduck.model.Todo
 
-class TodoAdapter : ListAdapter<Todo, TodoAdapter.TaskHolder>(Comparator()) {
+class TodoAdapter(private val listener: Listener) : ListAdapter<Todo, TodoAdapter.TaskHolder>(Comparator()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskHolder {
         return TaskHolder.create(parent)
     }
 
     override fun onBindViewHolder(holder: TaskHolder, position: Int) {
-        holder.setData(getItem(position))
+        holder.setData(getItem(position), listener)
     }
 
     class TaskHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val binding = TaskBinding.bind(view)
 
-        fun setData(task: Todo) = with(binding) {
+        fun setData(task: Todo, listener: Listener) = with(binding) {
             taskTitle.text = task.name
+
+            taskCheckbox.isChecked = task.isCompleted
+            taskCheckbox.setOnClickListener {
+                listener.onClickItem(task.copy(isCompleted = taskCheckbox.isChecked))
+            }
         }
 
         companion object {
@@ -44,5 +49,10 @@ class TodoAdapter : ListAdapter<Todo, TodoAdapter.TaskHolder>(Comparator()) {
         override fun areContentsTheSame(oldItem: Todo, newItem: Todo): Boolean {
             return oldItem == newItem
         }
+    }
+
+    interface Listener {
+        fun onClickItem(task: Todo)
+        fun deleteTodo(id: Int)
     }
 }

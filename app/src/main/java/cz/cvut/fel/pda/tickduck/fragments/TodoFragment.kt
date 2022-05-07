@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.LinearLayoutManager
 import cz.cvut.fel.pda.tickduck.activities.MainApp
 import cz.cvut.fel.pda.tickduck.activities.NewTodoActivity
@@ -16,8 +17,10 @@ import cz.cvut.fel.pda.tickduck.databinding.FragmentTodoBinding
 import cz.cvut.fel.pda.tickduck.db.MainViewModel
 import cz.cvut.fel.pda.tickduck.db.TodoAdapter
 import cz.cvut.fel.pda.tickduck.model.Todo
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.RecyclerView
 
-class TodoFragment : BaseFragment() {
+class TodoFragment : BaseFragment(), TodoAdapter.Listener {
 
     private lateinit var binding: FragmentTodoBinding
     private lateinit var editLauncher: ActivityResultLauncher<Intent>
@@ -67,12 +70,37 @@ class TodoFragment : BaseFragment() {
 
     private fun initRCView() = with(binding) {
         rcViewTodos.layoutManager = LinearLayoutManager(activity)
-        adapter = TodoAdapter()
+        adapter = TodoAdapter(this@TodoFragment)
+        ItemTouchHelper(simpleCallback).attachToRecyclerView(rcViewTodos)
         rcViewTodos.adapter = adapter
     }
-
     companion object {
         @JvmStatic
         fun newInstance() = TodoFragment()
+    }
+
+    override fun onClickItem(task: Todo) {
+        mainViewModel.updateTodo(task)
+    }
+
+    override fun deleteTodo(id: Int) {
+        mainViewModel.deleteTodo(id)
+    }
+
+    private val simpleCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+        override fun onMove(
+            recyclerView: RecyclerView,
+            viewHolder: RecyclerView.ViewHolder,
+            target: RecyclerView.ViewHolder
+        ): Boolean {
+            TODO("Not yet implemented")
+        }
+
+        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+            val id: Int? = mainViewModel.allTodos.value?.get(viewHolder.adapterPosition)?.id
+            if (id != null) {
+                deleteTodo(id)
+            }
+        }
     }
 }
