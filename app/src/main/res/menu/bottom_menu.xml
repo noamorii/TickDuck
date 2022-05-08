@@ -20,6 +20,6 @@
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/placeholder"
-        android:title=""
-        android:enabled="false"/>
+        android:enabled="false"
+        android:title="" />
 </menu>
