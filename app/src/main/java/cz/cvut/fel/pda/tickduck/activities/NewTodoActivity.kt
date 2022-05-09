@@ -1,18 +1,19 @@
 package cz.cvut.fel.pda.tickduck.activities
 
 import android.app.DatePickerDialog
-import android.app.DatePickerDialog.OnDateSetListener
+import android.app.TimePickerDialog
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.ArrayAdapter
-import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import cz.cvut.fel.pda.tickduck.R
 import cz.cvut.fel.pda.tickduck.databinding.ActivityNewTodoBinding
 import cz.cvut.fel.pda.tickduck.model.Todo
 import cz.cvut.fel.pda.tickduck.model.enums.FlagType
+import java.sql.Date
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -79,27 +80,51 @@ class NewTodoActivity : AppCompatActivity() {
         val calendar = Calendar.getInstance()
         val edDateField = binding.edDate
 
-        val updateCalendarLabel = { target: EditText ->
-            val format = "dd/MM/yy"
-            val dateFormat = SimpleDateFormat(format, Locale.ENGLISH)
-            target.setText(dateFormat.format(calendar.time))
+        val updateDateLabel = {
+            edDateField.setText(
+                SimpleDateFormat("dd.MM.", Locale.ENGLISH)
+                    .format(calendar.time)
+            )
         }
 
-        val dateSetListener = OnDateSetListener { _, year, month, day ->
-            calendar.set(Calendar.YEAR, year)
-            calendar.set(Calendar.MONTH, month)
-            calendar.set(Calendar.DAY_OF_MONTH, day)
-            updateCalendarLabel(edDateField)
+        val updateDateTimeLabel = {
+            edDateField.setText(
+                SimpleDateFormat("dd.MM., HH:mm aa", Locale.ENGLISH)
+                    .format(calendar.time)
+            )
         }
+
+        val timeSetListener = TimePickerDialog.OnTimeSetListener { _, hour, minute ->
+            calendar.set(Calendar.HOUR_OF_DAY, hour)
+            calendar.set(Calendar.MINUTE, minute)
+            updateDateTimeLabel()
+        }
+
+        val dateSetListener = DatePickerDialog.OnDateSetListener { _, year, month, day ->
+            calendar.set(year, month, day)
+            updateDateLabel()
+        }
+
+        val timePicker = TimePickerDialog(
+            this,
+            timeSetListener,
+            calendar[Calendar.HOUR],
+            calendar[Calendar.MINUTE],
+            false
+        )
 
         edDateField.setOnClickListener {
-            DatePickerDialog(
+            val a = DatePickerDialog(
                 this,
                 dateSetListener,
                 calendar.get(Calendar.YEAR),
                 calendar.get(Calendar.MONTH),
                 calendar.get(Calendar.DAY_OF_MONTH)
-            ).show()
+            )
+            a.setButton(DialogInterface.BUTTON_NEUTRAL, "Time") { _, _ ->
+                timePicker.show()
+            }
+            a.show()
         }
     }
 }
