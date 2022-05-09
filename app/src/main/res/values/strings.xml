@@ -9,4 +9,7 @@
     <string name="date_hint">Date</string>
     <string name="description_hint">Description</string>
     <string name="create_todo">Create</string>
+    <string name="create_new_category">Create new category</string>
+    <string name="plus_category">Plus category</string>
+    <string name="all_categories">All categories</string>
 </resources>
