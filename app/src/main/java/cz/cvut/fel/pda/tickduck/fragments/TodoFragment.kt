@@ -9,16 +9,15 @@ import android.view.ViewGroup
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.LiveData
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import cz.cvut.fel.pda.tickduck.activities.MainApp
 import cz.cvut.fel.pda.tickduck.activities.NewTodoActivity
 import cz.cvut.fel.pda.tickduck.databinding.FragmentTodoBinding
 import cz.cvut.fel.pda.tickduck.db.MainViewModel
 import cz.cvut.fel.pda.tickduck.db.TodoAdapter
 import cz.cvut.fel.pda.tickduck.model.Todo
-import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.RecyclerView
 
 class TodoFragment : BaseFragment(), TodoAdapter.Listener {
 

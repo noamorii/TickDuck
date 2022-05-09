@@ -1,10 +1,10 @@
 package cz.cvut.fel.pda.tickduck.activities
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.appcompat.app.AppCompatActivity
 import cz.cvut.fel.pda.tickduck.R
 import cz.cvut.fel.pda.tickduck.databinding.ActivityNewTodoBinding
 import cz.cvut.fel.pda.tickduck.model.Todo
