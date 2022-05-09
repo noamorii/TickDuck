@@ -1,72 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.NewTodoActivity">
+    tools:context=".activities.NewTodoActivity"
+    >
 
     <include
         android:id="@+id/toolbar"
         layout="@layout/create_todo_toolbar"/>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <ScrollView
+        android:layout_below="@id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar"
-        android:padding="16dp">
+        android:fillViewport="true"
+        >
 
-        <EditText
-            android:id="@+id/edDescription"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:autofillHints="name"
-            android:ems="10"
-            android:gravity="top"
-            android:hint="@string/description_hint"
-            android:inputType="textPersonName"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/edDate"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/edDate"
-            app:layout_constraintTop_toBottomOf="@+id/edDate"
-            app:layout_constraintVertical_bias="1.0" />
-
-        <EditText
-            android:id="@+id/edDate"
-            android:layout_width="0dp"
+        <LinearLayout
+            android:id="@+id/sub_content_view"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="@string/date_hint"
-            android:inputType="date"
-            android:minHeight="48dp"
-            app:layout_constraintEnd_toEndOf="@+id/edCategory"
-            app:layout_constraintStart_toStartOf="@+id/edCategory"
-            app:layout_constraintTop_toBottomOf="@+id/edCategory" />
+            android:orientation="vertical"
+            android:paddingHorizontal="16dp"
+            android:layout_marginTop="16dp"
+            android:paddingBottom="5sp">
 
-        <EditText
-            android:id="@+id/edCategory"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="@string/category_hint"
-            android:inputType="textPersonName"
-            android:minHeight="48dp"
-            app:layout_constraintEnd_toEndOf="@+id/edTask"
-            app:layout_constraintStart_toStartOf="@+id/edTask"
-            app:layout_constraintTop_toBottomOf="@+id/edTask" />
+            <EditText
+                android:id="@+id/edTask"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="@string/title_hint"
+                android:inputType="text"
+                android:minHeight="48dp"
+                android:autofillHints="" />
 
-        <EditText
-            android:id="@+id/edTask"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="@string/title_hint"
-            android:inputType="textPersonName"
-            android:minHeight="48dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <Spinner
+                android:id="@+id/edCategory"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:minHeight="48dp"
+                />
+
+            <EditText
+                android:id="@+id/edDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="@string/date_hint"
+                android:clickable="false"
+                android:cursorVisible="false"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:importantForAutofill="no"
+                android:inputType="date"
+                />
+
+            <EditText
+                android:id="@+id/edDescription"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:baselineAligned="false"
+                android:ems="10"
+                android:gravity="top"
+                android:hint="@string/description_hint"
+                android:inputType="text|textMultiLine"
+                android:autofillHints=""
+                android:nestedScrollingEnabled="false"
+                android:overScrollMode="never"
+                />
+        </LinearLayout>
+    </ScrollView>
+
     <!--    </androidx.cardview.widget.CardView>-->
 </RelativeLayout>
