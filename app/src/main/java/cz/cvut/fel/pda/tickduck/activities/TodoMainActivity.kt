@@ -8,7 +8,7 @@ import cz.cvut.fel.pda.tickduck.databinding.ActivityDrawerBinding
 import cz.cvut.fel.pda.tickduck.fragments.FragmentManager
 import cz.cvut.fel.pda.tickduck.fragments.TodoFragment
 
-class MainActivity : AppCompatActivity() {
+class TodoMainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityDrawerBinding
 
