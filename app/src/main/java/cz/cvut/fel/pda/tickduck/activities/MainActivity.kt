@@ -10,9 +10,10 @@ import cz.cvut.fel.pda.tickduck.fragments.TodoFragment
 
 class MainActivity : AppCompatActivity() {
 
-    lateinit var binding: ActivityDrawerBinding
+    private lateinit var binding: ActivityDrawerBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         binding = ActivityDrawerBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -21,7 +22,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setNavigationListener() {
-        binding.bottomNavigationView.setOnItemSelectedListener {
+        binding.mainInclude.bottomNavigationView.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.settings -> {
                     Log.d("Log", "Settings")
@@ -36,9 +37,15 @@ class MainActivity : AppCompatActivity() {
             true
         }
 
-        binding.fab.setOnClickListener {
+        binding.mainInclude.fab.setOnClickListener {
             FragmentManager.currentFragment?.onClickNew()
             Log.d("Log", "New Todo")
+        }
+    }
+
+    private fun setNavigationViewMenuListener() {
+        binding.categoryButton.setOnClickListener {
+            println("hello")
         }
     }
 
