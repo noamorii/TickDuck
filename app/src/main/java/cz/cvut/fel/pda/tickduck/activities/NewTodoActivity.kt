@@ -4,22 +4,34 @@ import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.DialogInterface
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.ArrayAdapter
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import cz.cvut.fel.pda.tickduck.R
 import cz.cvut.fel.pda.tickduck.databinding.ActivityNewTodoBinding
 import cz.cvut.fel.pda.tickduck.model.Todo
 import cz.cvut.fel.pda.tickduck.model.enums.FlagType
-import java.sql.Date
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.LocalTime
 import java.util.*
 
 
 class NewTodoActivity : AppCompatActivity() {
+
+    companion object {
+        private const val DATE_PATTERN = "dd.MM."
+        private const val DATE_TIME_PATTERN = "$DATE_PATTERN, HH:mm aa"
+    }
+
     private lateinit var binding: ActivityNewTodoBinding
+
+    private var localTime: LocalTime? = null
+    private var localDate: LocalDate? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,14 +66,14 @@ class NewTodoActivity : AppCompatActivity() {
     private fun setResult() {
         val intent = Intent().apply {
             putExtra("new_todo", Todo(
-                null,
-                binding.edTask.text.toString(),
-                binding.edDescription.text.toString(),
-                1,
-                FlagType.BLUE, //todo
-                null,
-                binding.edCategory.id,
-                false
+                name = binding.edTask.text.toString(),
+                description = binding.edDescription.text.toString(),
+                flagInfo = FlagType.BLUE,
+                userId = 1,
+                time = localTime?.toString(),
+                date = localDate?.toString(),
+                imgName = "idk",
+                idCategory = binding.edCategory.id
                 )
             )
         }
@@ -76,55 +88,64 @@ class NewTodoActivity : AppCompatActivity() {
         )
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun initCalendar() {
-        val calendar = Calendar.getInstance()
         val edDateField = binding.edDate
+        val calendar = Calendar.getInstance()
 
-        val updateDateLabel = {
+        val setLocalDate = {
+            localDate = LocalDate.of(
+                calendar[Calendar.YEAR],
+                calendar[Calendar.MONTH],
+                calendar[Calendar.DAY_OF_MONTH]
+            )
+        }
+
+        val setLocalDateAndTime = {
+            setLocalDate()
+            localTime = LocalTime.of(
+                calendar[Calendar.HOUR],
+                calendar[Calendar.MINUTE]
+            )
+        }
+
+        val updateLabel = { pattern: String ->
             edDateField.setText(
-                SimpleDateFormat("dd.MM.", Locale.ENGLISH)
+                SimpleDateFormat(pattern, Locale.ENGLISH)
                     .format(calendar.time)
             )
         }
 
-        val updateDateTimeLabel = {
-            edDateField.setText(
-                SimpleDateFormat("dd.MM., HH:mm aa", Locale.ENGLISH)
-                    .format(calendar.time)
-            )
+        val dateSetListener = DatePickerDialog.OnDateSetListener { _, year, month, day ->
+            calendar.set(year, month, day)
+            updateLabel(DATE_PATTERN)
+            setLocalDate()
         }
 
         val timeSetListener = TimePickerDialog.OnTimeSetListener { _, hour, minute ->
             calendar.set(Calendar.HOUR_OF_DAY, hour)
             calendar.set(Calendar.MINUTE, minute)
-            updateDateTimeLabel()
+            updateLabel(DATE_TIME_PATTERN)
+            setLocalDateAndTime()
         }
-
-        val dateSetListener = DatePickerDialog.OnDateSetListener { _, year, month, day ->
-            calendar.set(year, month, day)
-            updateDateLabel()
-        }
-
-        val timePicker = TimePickerDialog(
-            this,
-            timeSetListener,
-            calendar[Calendar.HOUR],
-            calendar[Calendar.MINUTE],
-            false
-        )
 
         edDateField.setOnClickListener {
-            val a = DatePickerDialog(
-                this,
+            DatePickerDialog(this,
                 dateSetListener,
                 calendar.get(Calendar.YEAR),
                 calendar.get(Calendar.MONTH),
                 calendar.get(Calendar.DAY_OF_MONTH)
-            )
-            a.setButton(DialogInterface.BUTTON_NEUTRAL, "Time") { _, _ ->
-                timePicker.show()
+            ).apply {
+                this.setButton(DialogInterface.BUTTON_NEUTRAL, "Time") { _, _ ->
+                    TimePickerDialog(this@NewTodoActivity,
+                        timeSetListener,
+                        calendar[Calendar.HOUR],
+                        calendar[Calendar.MINUTE],
+                        false
+                    ).show()
+                }
+                this.show()
             }
-            a.show()
         }
     }
 }
