@@ -18,11 +18,11 @@ import cz.cvut.fel.pda.tickduck.db.viewmodels.MainViewModel
 import cz.cvut.fel.pda.tickduck.fragments.FragmentManager
 import cz.cvut.fel.pda.tickduck.fragments.TodoFragment
 import cz.cvut.fel.pda.tickduck.model.Category
-import kotlinx.coroutines.CoroutineScope
 
 class TodoMainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityDrawerBinding
+    private val viewModel: MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,8 +32,6 @@ class TodoMainActivity : AppCompatActivity() {
         FragmentManager.setFragment(TodoFragment.newInstance(), this)
         setNavigationViewMenuListener()
     }
-
-    private val viewModel: MainViewModel by viewModels()
 
     private fun setNavigationListener() {
         binding.mainInclude.bottomNavigationView.setOnItemSelectedListener {
@@ -58,7 +56,7 @@ class TodoMainActivity : AppCompatActivity() {
     }
 
     private fun setNavigationViewMenuListener() {
-        binding.categoryButton.setOnClickListener {
+        binding.drawerCreateCategoryButton.setOnClickListener {
             showDialog()
         }
     }
@@ -84,7 +82,7 @@ class TodoMainActivity : AppCompatActivity() {
                 viewModel.insertCategory(
                     Category(null, name, 0)
                 )
-                binding.navView.menu.add(name)
+                binding.drawerNavView.menu.add(name)
                 dialog.dismiss()
             }
         }
