@@ -46,6 +46,10 @@ class TodoViewModel(
 //            }
 //        }
 //        return null
+    }
 
+    fun categoryExists(name: String): Boolean {
+        return allCategories.value?.map { it.name }!!
+            .contains(name)
     }
 }

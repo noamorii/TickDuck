@@ -79,9 +79,10 @@ class TodoMainActivity : AppCompatActivity() {
         val createButton: ImageButton = dialog.findViewById(R.id.create_category_button)
         createButton.setOnClickListener {
             val name: String = dialog.findViewById<EditText?>(R.id.newCategoryName).text.toString()
-            if (viewModel.findCategory(name) == null) {
-                val category = Category(null, name)
-                viewModel.insertCategory(category);
+            if (!viewModel.categoryExists(name)) {
+                viewModel.insertCategory(
+                    Category(null, name, 0)
+                )
                 binding.navView.menu.add(name)
                 dialog.dismiss()
             }

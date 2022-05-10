@@ -8,5 +8,7 @@ data class Category(
     @PrimaryKey (autoGenerate = true)
     val id: Int?,
 
-    val name: String
+    val name: String,
+
+    val clickCounter: Long = 0
 )

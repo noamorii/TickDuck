@@ -17,7 +17,7 @@ interface Dao {
     @Query ("SELECT * FROM Todos")
     fun getAllTodos(): Flow<List<Todo>>
 
-    @Query ("SELECT * FROM Categories WHERE name IS :name")
+    @Query ("SELECT * FROM Categories WHERE name IS :name ORDER BY clickCounter DESC")
     suspend fun findCategory(name: String): List<Category>
 
     @Insert
