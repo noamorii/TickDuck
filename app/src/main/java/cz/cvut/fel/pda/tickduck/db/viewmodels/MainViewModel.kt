@@ -7,7 +7,7 @@ import cz.cvut.fel.pda.tickduck.model.Category
 import cz.cvut.fel.pda.tickduck.model.Todo
 import kotlinx.coroutines.launch
 
-class TodoViewModel(
+class MainViewModel(
     database: MainDB
 ) : ViewModel() {
     private val dao = database.getDao()
