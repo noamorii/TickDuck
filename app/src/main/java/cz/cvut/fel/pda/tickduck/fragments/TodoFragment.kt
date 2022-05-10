@@ -9,24 +9,30 @@ import android.view.ViewGroup
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.activityViewModels
-import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import cz.cvut.fel.pda.tickduck.activities.MainApp
+import cz.cvut.fel.pda.tickduck.MainApp
 import cz.cvut.fel.pda.tickduck.activities.NewTodoActivity
 import cz.cvut.fel.pda.tickduck.databinding.FragmentTodoBinding
-import cz.cvut.fel.pda.tickduck.db.MainViewModel
-import cz.cvut.fel.pda.tickduck.db.TodoAdapter
+import cz.cvut.fel.pda.tickduck.db.viewmodels.TodoViewModel
+import cz.cvut.fel.pda.tickduck.adapters.TodoAdapter
 import cz.cvut.fel.pda.tickduck.model.Todo
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.RecyclerView
+import cz.cvut.fel.pda.tickduck.db.viewmodels.factories.TodoViewModelFactory
 
 class TodoFragment : BaseFragment(), TodoAdapter.Listener {
+
+    companion object {
+        @JvmStatic
+        fun newInstance() = TodoFragment()
+    }
 
     private lateinit var binding: FragmentTodoBinding
     private lateinit var editLauncher: ActivityResultLauncher<Intent>
     private lateinit var adapter: TodoAdapter
 
-    private val mainViewModel: MainViewModel by activityViewModels {
-        MainViewModel.MainViewModelFactory((context?.applicationContext as MainApp).database)
+    private val todoViewModel: TodoViewModel by activityViewModels {
+        TodoViewModelFactory((context?.applicationContext as MainApp).database)
     }
 
     override fun onClickNew() {
@@ -42,7 +48,7 @@ class TodoFragment : BaseFragment(), TodoAdapter.Listener {
         editLauncher = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == Activity.RESULT_OK) {
-                mainViewModel.insertTodo(it.data?.getSerializableExtra("new_todo") as Todo)
+                todoViewModel.insertTodo(it.data?.getSerializableExtra("new_todo") as Todo)
             }
         }
     }
@@ -62,7 +68,7 @@ class TodoFragment : BaseFragment(), TodoAdapter.Listener {
     }
 
     private fun setObserver() {
-        mainViewModel.allTodos.observe(viewLifecycleOwner) {
+        todoViewModel.allTodos.observe(viewLifecycleOwner) {
             adapter.submitList(it)
         }
     }
@@ -73,17 +79,13 @@ class TodoFragment : BaseFragment(), TodoAdapter.Listener {
         ItemTouchHelper(simpleCallback).attachToRecyclerView(rcViewTodos)
         rcViewTodos.adapter = adapter
     }
-    companion object {
-        @JvmStatic
-        fun newInstance() = TodoFragment()
-    }
 
     override fun onClickItem(task: Todo) {
-        mainViewModel.updateTodo(task)
+        todoViewModel.updateTodo(task)
     }
 
     override fun deleteTodo(id: Int) {
-        mainViewModel.deleteTodo(id)
+        todoViewModel.deleteTodo(id)
     }
 
     private val simpleCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
@@ -96,7 +98,7 @@ class TodoFragment : BaseFragment(), TodoAdapter.Listener {
         }
 
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-            val id: Int? = mainViewModel.allTodos.value?.get(viewHolder.adapterPosition)?.id
+            val id: Int? = todoViewModel.allTodos.value?.get(viewHolder.adapterPosition)?.id
             if (id != null) {
                 deleteTodo(id)
             }

@@ -19,7 +19,7 @@ import cz.cvut.fel.pda.tickduck.fragments.FragmentManager
 import cz.cvut.fel.pda.tickduck.fragments.TodoFragment
 import cz.cvut.fel.pda.tickduck.model.Category
 
-class MainActivity : AppCompatActivity() {
+class TodoMainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityDrawerBinding
 

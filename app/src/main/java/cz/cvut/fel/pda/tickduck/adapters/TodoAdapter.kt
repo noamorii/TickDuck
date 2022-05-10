@@ -1,4 +1,4 @@
-package cz.cvut.fel.pda.tickduck.db
+package cz.cvut.fel.pda.tickduck.adapters
 
 import android.view.LayoutInflater
 import android.view.View
@@ -10,7 +10,9 @@ import cz.cvut.fel.pda.tickduck.R
 import cz.cvut.fel.pda.tickduck.databinding.TaskBinding
 import cz.cvut.fel.pda.tickduck.model.Todo
 
-class TodoAdapter(private val listener: Listener) : ListAdapter<Todo, TodoAdapter.TaskHolder>(Comparator()) {
+class TodoAdapter(
+    private val listener: Listener
+) : ListAdapter<Todo, TodoAdapter.TaskHolder>(Comparator()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskHolder {
         return TaskHolder.create(parent)
