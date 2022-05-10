@@ -27,7 +27,6 @@ class TodoAdapter(
 
         fun setData(task: Todo, listener: Listener) = with(binding) {
             taskTitle.text = task.name
-
             taskCheckbox.isChecked = task.isCompleted
             taskCheckbox.setOnClickListener {
                 listener.onClickItem(task.copy(isCompleted = taskCheckbox.isChecked))

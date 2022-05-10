@@ -3,12 +3,18 @@ package cz.cvut.fel.pda.tickduck.fragments
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Transformations
+import androidx.lifecycle.liveData
 import androidx.recyclerview.widget.LinearLayoutManager
 import cz.cvut.fel.pda.tickduck.MainApp
 import cz.cvut.fel.pda.tickduck.activities.NewTodoActivity
@@ -17,8 +23,10 @@ import cz.cvut.fel.pda.tickduck.adapters.TodoAdapter
 import cz.cvut.fel.pda.tickduck.model.Todo
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import cz.cvut.fel.pda.tickduck.R
 import cz.cvut.fel.pda.tickduck.databinding.RecycleViewFragmentBinding
 import cz.cvut.fel.pda.tickduck.db.viewmodels.factories.MainViewModelFactory
+import java.util.*
 
 class TodoFragment : BaseFragment(), TodoAdapter.Listener {
 
@@ -44,6 +52,20 @@ class TodoFragment : BaseFragment(), TodoAdapter.Listener {
         onEditResult()
     }
 
+    private fun filter(text: String) {
+        val list: List<Todo>? = mainViewModel.allTodos.value
+        val result: MutableList<Todo> = mutableListOf()
+        if (list != null) {
+            for (todo in list) {
+                if (todo.name.lowercase(Locale.getDefault())
+                        .contains(text.lowercase(Locale.getDefault()))) {
+                    result.add(todo)
+                }
+            }
+            adapter.submitList(result)
+        }
+    }
+
     private fun onEditResult() {
         editLauncher = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()) {
@@ -65,6 +87,18 @@ class TodoFragment : BaseFragment(), TodoAdapter.Listener {
         super.onViewCreated(view, savedInstanceState)
         initRCView()
         setObserver()
+        val editText: EditText = binding.searchText
+        editText.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+                filter(p0.toString())
+            }
+
+        })
     }
 
     private fun setObserver() {

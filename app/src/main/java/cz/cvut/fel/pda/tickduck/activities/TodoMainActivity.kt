@@ -4,6 +4,8 @@ import android.app.Dialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.Gravity
 import android.view.View
@@ -31,8 +33,8 @@ class TodoMainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = LeftNavigationDrawerBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        setNavigationListener()
         FragmentManager.setFragment(TodoFragment.newInstance(), this)
+        setNavigationListener()
         loadCategories()
         setNavigationViewMenuListener()
     }
