@@ -6,13 +6,14 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
+import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.EditText
 import android.widget.ImageButton
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
+import androidx.drawerlayout.widget.DrawerLayout
 import cz.cvut.fel.pda.tickduck.R
 import cz.cvut.fel.pda.tickduck.databinding.LeftNavigationDrawerBinding
 import cz.cvut.fel.pda.tickduck.db.viewmodels.MainViewModel
@@ -24,11 +25,7 @@ class TodoMainActivity : AppCompatActivity() {
 
     private lateinit var binding: LeftNavigationDrawerBinding
     private val viewModel: MainViewModel by viewModels()
-//        viewModel.allCategories.observe(this, Observer {
-//        })
-   //     viewModel.allCategories.observe(this) { }
-      // setAllCategoriesFromDB()
-    //}
+    private var areCategoriesLoaded = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,6 +33,7 @@ class TodoMainActivity : AppCompatActivity() {
         setContentView(binding.root)
         setNavigationListener()
         FragmentManager.setFragment(TodoFragment.newInstance(), this)
+        loadCategories()
         setNavigationViewMenuListener()
     }
 
@@ -80,28 +78,7 @@ class TodoMainActivity : AppCompatActivity() {
         setListenerOnCreateButton(dialog)
     }
 
-    private fun setAllCategoriesFromDB() {
-        val categories = viewModel.allCategories.value
-
-        if (categories != null) {
-            for (category: Category in categories) {
-                binding.drawerNavView.menu.add(category.name)
-            }
-        }
-
-    }
-
     private fun setListenerOnCreateButton(dialog: Dialog) {
-        viewModel.allCategories.observe(this, Observer {
-        })
-        val categories = viewModel.allCategories.value
-        println(categories)
-
-        if (categories != null) {
-            for (category: Category in categories) {
-                binding.drawerNavView.menu.add(category.name)
-            }
-        }
         val createButton: ImageButton = dialog.findViewById(R.id.create_category_button)
         createButton.setOnClickListener {
             val name: String = dialog.findViewById<EditText?>(R.id.newCategoryName).text.toString()
@@ -110,8 +87,31 @@ class TodoMainActivity : AppCompatActivity() {
                     Category(null, name, 0)
                 )
                 binding.drawerNavView.menu.add(name)
-                dialog.dismiss()
             }
+            dialog.dismiss()
         }
+    }
+
+    private fun loadCategories() {
+        binding.drawerLayout.addDrawerListener(object : DrawerLayout.DrawerListener {
+            override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
+                viewModel.allCategories.observe(this@TodoMainActivity) {}
+                if (!areCategoriesLoaded) {
+                    val categories = viewModel.allCategories.value
+                    if (categories != null) {
+                        for (category: Category in categories) {
+                            binding.drawerNavView.menu.add(category.name)
+                        }
+                        if (binding.drawerNavView.menu.size() > 1) {
+                            areCategoriesLoaded = true
+                            binding.drawerLayout.removeDrawerListener(this)
+                        }
+                    }
+                }
+            }
+            override fun onDrawerOpened(drawerView: View) {}
+            override fun onDrawerStateChanged(newState: Int) {}
+            override fun onDrawerClosed(drawerView: View) {}
+        })
     }
 }
