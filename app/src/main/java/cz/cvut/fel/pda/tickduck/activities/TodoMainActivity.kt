@@ -14,7 +14,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import cz.cvut.fel.pda.tickduck.R
 import cz.cvut.fel.pda.tickduck.databinding.ActivityDrawerBinding
-import cz.cvut.fel.pda.tickduck.db.MainViewModel
+import cz.cvut.fel.pda.tickduck.db.viewmodels.TodoViewModel
 import cz.cvut.fel.pda.tickduck.fragments.FragmentManager
 import cz.cvut.fel.pda.tickduck.fragments.TodoFragment
 import cz.cvut.fel.pda.tickduck.model.Category
@@ -32,7 +32,7 @@ class TodoMainActivity : AppCompatActivity() {
         setNavigationViewMenuListener()
     }
 
-    private val viewModel: MainViewModel by viewModels()
+    private val viewModel: TodoViewModel by viewModels()
 
     private fun setNavigationListener() {
         binding.mainInclude.bottomNavigationView.setOnItemSelectedListener {
