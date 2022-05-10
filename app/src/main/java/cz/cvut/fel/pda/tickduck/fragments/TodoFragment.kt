@@ -12,9 +12,6 @@ import android.widget.EditText
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.Transformations
-import androidx.lifecycle.liveData
 import androidx.recyclerview.widget.LinearLayoutManager
 import cz.cvut.fel.pda.tickduck.MainApp
 import cz.cvut.fel.pda.tickduck.activities.NewTodoActivity
@@ -23,7 +20,6 @@ import cz.cvut.fel.pda.tickduck.adapters.TodoAdapter
 import cz.cvut.fel.pda.tickduck.model.Todo
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import cz.cvut.fel.pda.tickduck.R
 import cz.cvut.fel.pda.tickduck.databinding.RecycleViewFragmentBinding
 import cz.cvut.fel.pda.tickduck.db.viewmodels.factories.MainViewModelFactory
 import java.util.*
@@ -87,6 +83,10 @@ class TodoFragment : BaseFragment(), TodoAdapter.Listener {
         super.onViewCreated(view, savedInstanceState)
         initRCView()
         setObserver()
+        setSearch()
+    }
+
+    private fun setSearch() {
         val editText: EditText = binding.searchText
         editText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
@@ -94,7 +94,6 @@ class TodoFragment : BaseFragment(), TodoAdapter.Listener {
             override fun afterTextChanged(p0: Editable?) {
                 filter(p0.toString())
             }
-
         })
     }
 
