@@ -23,7 +23,7 @@ import cz.cvut.fel.pda.tickduck.fragments.FragmentManager
 import cz.cvut.fel.pda.tickduck.fragments.TodoFragment
 import cz.cvut.fel.pda.tickduck.model.Category
 
-class TodoMainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: LeftNavigationDrawerBinding
     private val viewModel: MainViewModel by viewModels()
@@ -97,7 +97,7 @@ class TodoMainActivity : AppCompatActivity() {
     private fun loadCategories() {
         binding.drawerLayout.addDrawerListener(object : DrawerLayout.DrawerListener {
             override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
-                viewModel.allCategories.observe(this@TodoMainActivity) {}
+                viewModel.allCategories.observe(this@MainActivity){}
                 if (!areCategoriesLoaded) {
                     val categories = viewModel.allCategories.value
                     if (categories != null) {
