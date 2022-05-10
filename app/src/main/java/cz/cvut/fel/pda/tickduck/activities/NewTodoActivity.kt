@@ -4,12 +4,13 @@ import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.DialogInterface
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import androidx.annotation.RequiresApi
+import android.widget.BaseAdapter
 import androidx.appcompat.app.AppCompatActivity
 import cz.cvut.fel.pda.tickduck.R
 import cz.cvut.fel.pda.tickduck.databinding.ActivityNewTodoBinding
@@ -88,7 +89,6 @@ class NewTodoActivity : AppCompatActivity() {
         )
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun initCalendar() {
         val edDateField = binding.edDate
         val calendar = Calendar.getInstance()

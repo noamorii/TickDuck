@@ -2,6 +2,7 @@ package cz.cvut.fel.pda.tickduck.db.viewmodels
 
 import androidx.lifecycle.*
 import cz.cvut.fel.pda.tickduck.db.MainDB
+import cz.cvut.fel.pda.tickduck.exception.NotFoundException
 import cz.cvut.fel.pda.tickduck.model.Category
 import cz.cvut.fel.pda.tickduck.model.Todo
 import kotlinx.coroutines.launch
@@ -10,9 +11,9 @@ class TodoViewModel(
     database: MainDB
 ) : ViewModel() {
     private val dao = database.getDao()
-    val allCategories: LiveData<List<Category>> = dao.getAllCategories().asLiveData()
 
-    val allTodos: LiveData<List<Todo>> = dao.getAllTodos().asLiveData()
+    val allCategories = dao.getAllCategories().asLiveData()
+    val allTodos = dao.getAllTodos().asLiveData()
 
     fun insertTodo(todo: Todo) = viewModelScope.launch {
         dao.insertTodo(todo)
@@ -30,14 +31,21 @@ class TodoViewModel(
         dao.deleteTodo(id)
     }
 
-    fun findCategory(name: String): Category? {
-        if (allCategories.value != null) {
-            for (category: Category in allCategories.value!!) {
-                if (category.name == name) {
-                    return category;
-                }
-            }
-        }
-        return null
+    // todo splnuje ocekavane chovaní?
+    fun findCategory(name: String): Category {
+        return allCategories.value?.stream()!!
+            .filter { it.name == name }
+            .findFirst()
+            .orElseThrow { NotFoundException("Category not found.") }
+
+//        if (allCategories.value != null) {
+//            for (category: Category in allCategories.value!!) {
+//                if (category.name == name) {
+//                    return category;
+//                }
+//            }
+//        }
+//        return null
+
     }
 }
