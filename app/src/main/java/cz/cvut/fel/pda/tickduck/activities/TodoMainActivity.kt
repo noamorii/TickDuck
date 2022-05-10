@@ -18,6 +18,7 @@ import cz.cvut.fel.pda.tickduck.db.viewmodels.MainViewModel
 import cz.cvut.fel.pda.tickduck.fragments.FragmentManager
 import cz.cvut.fel.pda.tickduck.fragments.TodoFragment
 import cz.cvut.fel.pda.tickduck.model.Category
+import kotlinx.coroutines.CoroutineScope
 
 class TodoMainActivity : AppCompatActivity() {
 

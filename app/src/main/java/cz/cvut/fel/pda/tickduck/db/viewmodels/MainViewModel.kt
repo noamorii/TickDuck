@@ -2,7 +2,6 @@ package cz.cvut.fel.pda.tickduck.db.viewmodels
 
 import androidx.lifecycle.*
 import cz.cvut.fel.pda.tickduck.db.MainDB
-import cz.cvut.fel.pda.tickduck.exception.NotFoundException
 import cz.cvut.fel.pda.tickduck.model.Category
 import cz.cvut.fel.pda.tickduck.model.Todo
 import kotlinx.coroutines.launch
@@ -29,23 +28,6 @@ class MainViewModel(
 
     fun deleteTodo(id: Int) = viewModelScope.launch {
         dao.deleteTodo(id)
-    }
-
-    // todo splnuje ocekavane chovaní?
-    fun findCategory(name: String): Category {
-        return allCategories.value?.stream()!!
-            .filter { it.name == name }
-            .findFirst()
-            .orElseThrow { NotFoundException("Category not found.") }
-
-//        if (allCategories.value != null) {
-//            for (category: Category in allCategories.value!!) {
-//                if (category.name == name) {
-//                    return category;
-//                }
-//            }
-//        }
-//        return null
     }
 
     fun categoryExists(name: String): Boolean {
