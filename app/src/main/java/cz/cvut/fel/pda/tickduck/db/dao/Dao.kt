@@ -11,13 +11,13 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface Dao {
 
-    @Query ("SELECT * FROM Categories")
+    @Query ("SELECT * FROM Categories ORDER BY clickCounter DESC")
     fun getAllCategories(): Flow<List<Category>>
 
     @Query ("SELECT * FROM Todos")
     fun getAllTodos(): Flow<List<Todo>>
 
-    @Query ("SELECT * FROM Categories WHERE name IS :name ORDER BY clickCounter DESC")
+    @Query ("SELECT * FROM Categories WHERE name IS :name")
     suspend fun findCategory(name: String): List<Category>
 
     @Insert
