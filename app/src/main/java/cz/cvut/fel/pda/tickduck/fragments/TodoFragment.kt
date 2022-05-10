@@ -12,12 +12,12 @@ import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import cz.cvut.fel.pda.tickduck.MainApp
 import cz.cvut.fel.pda.tickduck.activities.NewTodoActivity
-import cz.cvut.fel.pda.tickduck.databinding.FragmentTodoBinding
 import cz.cvut.fel.pda.tickduck.db.viewmodels.MainViewModel
 import cz.cvut.fel.pda.tickduck.adapters.TodoAdapter
 import cz.cvut.fel.pda.tickduck.model.Todo
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import cz.cvut.fel.pda.tickduck.databinding.RecycleViewFragmentBinding
 import cz.cvut.fel.pda.tickduck.db.viewmodels.factories.MainViewModelFactory
 
 class TodoFragment : BaseFragment(), TodoAdapter.Listener {
@@ -27,7 +27,7 @@ class TodoFragment : BaseFragment(), TodoAdapter.Listener {
         fun newInstance() = TodoFragment()
     }
 
-    private lateinit var binding: FragmentTodoBinding
+    private lateinit var binding: RecycleViewFragmentBinding
     private lateinit var editLauncher: ActivityResultLauncher<Intent>
     private lateinit var adapter: TodoAdapter
 
@@ -57,7 +57,7 @@ class TodoFragment : BaseFragment(), TodoAdapter.Listener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentTodoBinding.inflate(inflater, container, false)
+        binding = RecycleViewFragmentBinding.inflate(inflater, container, false)
         return binding.root
     }
 

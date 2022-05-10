@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import cz.cvut.fel.pda.tickduck.R
-import cz.cvut.fel.pda.tickduck.databinding.TaskBinding
+import cz.cvut.fel.pda.tickduck.databinding.TodoItemBinding
 import cz.cvut.fel.pda.tickduck.model.Category
 
 class CategoryAdapter(
@@ -23,13 +23,13 @@ class CategoryAdapter(
     }
 
     class CategoryHolder(view: View) : RecyclerView.ViewHolder(view) {
-        private val binding = TaskBinding.bind(view)
+        private val binding = TodoItemBinding.bind(view)
 
         companion object {
             fun create(parent: ViewGroup): CategoryHolder {
                 return CategoryHolder(LayoutInflater
                     .from(parent.context)
-                    .inflate(R.layout.task, parent, false)
+                    .inflate(R.layout.todo_item, parent, false)
                 )
             }
         }

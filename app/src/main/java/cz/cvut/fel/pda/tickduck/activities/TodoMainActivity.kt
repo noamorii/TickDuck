@@ -12,8 +12,9 @@ import android.widget.EditText
 import android.widget.ImageButton
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import cz.cvut.fel.pda.tickduck.R
-import cz.cvut.fel.pda.tickduck.databinding.ActivityDrawerBinding
+import cz.cvut.fel.pda.tickduck.databinding.LeftNavigationDrawerBinding
 import cz.cvut.fel.pda.tickduck.db.viewmodels.MainViewModel
 import cz.cvut.fel.pda.tickduck.fragments.FragmentManager
 import cz.cvut.fel.pda.tickduck.fragments.TodoFragment
@@ -21,12 +22,17 @@ import cz.cvut.fel.pda.tickduck.model.Category
 
 class TodoMainActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityDrawerBinding
+    private lateinit var binding: LeftNavigationDrawerBinding
     private val viewModel: MainViewModel by viewModels()
+//        viewModel.allCategories.observe(this, Observer {
+//        })
+   //     viewModel.allCategories.observe(this) { }
+      // setAllCategoriesFromDB()
+    //}
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityDrawerBinding.inflate(layoutInflater)
+        binding = LeftNavigationDrawerBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setNavigationListener()
         FragmentManager.setFragment(TodoFragment.newInstance(), this)
@@ -64,17 +70,38 @@ class TodoMainActivity : AppCompatActivity() {
     private fun showDialog() {
         val dialog = Dialog(this)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        dialog.setContentView(R.layout.activity_new_category)
+        dialog.setContentView(R.layout.new_category_popup)
         dialog.show()
         dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         dialog.window?.attributes?.windowAnimations = R.style.DialogAnimation
         dialog.window?.setGravity(Gravity.BOTTOM)
 
-        setListenerOnCreate(dialog)
+        setListenerOnCreateButton(dialog)
     }
 
-    private fun setListenerOnCreate(dialog: Dialog) {
+    private fun setAllCategoriesFromDB() {
+        val categories = viewModel.allCategories.value
+
+        if (categories != null) {
+            for (category: Category in categories) {
+                binding.drawerNavView.menu.add(category.name)
+            }
+        }
+
+    }
+
+    private fun setListenerOnCreateButton(dialog: Dialog) {
+        viewModel.allCategories.observe(this, Observer {
+        })
+        val categories = viewModel.allCategories.value
+        println(categories)
+
+        if (categories != null) {
+            for (category: Category in categories) {
+                binding.drawerNavView.menu.add(category.name)
+            }
+        }
         val createButton: ImageButton = dialog.findViewById(R.id.create_category_button)
         createButton.setOnClickListener {
             val name: String = dialog.findViewById<EditText?>(R.id.newCategoryName).text.toString()

@@ -6,8 +6,8 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/dialog_bg"
-    tools:context=".activities.MainActivity">
+    android:background="@drawable/popup_background"
+    tools:context=".activities.TodoMainActivity">
 
     <EditText
         android:id="@+id/newCategoryName"
@@ -27,7 +27,7 @@
         android:id="@+id/create_category_button"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:background="@drawable/ic_baseline_play_arrow_24"
+        android:background="@drawable/play_icon"
         app:layout_constraintBottom_toBottomOf="@+id/newCategoryName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.752"

@@ -6,17 +6,17 @@
     <item
         android:id="@+id/todayTodos"
         android:title="@string/todayTodos"
-        android:icon="@drawable/ic_todays_todos"
+        android:icon="@drawable/todays_todos_icon"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/calendar"
         android:title="@string/calendar"
-        android:icon="@drawable/ic_calendar"
+        android:icon="@drawable/calendar_icon"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/settings"
         android:title="@string/settings"
-        android:icon="@drawable/ic_settings"
+        android:icon="@drawable/settings_icon"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/placeholder"

@@ -12,7 +12,7 @@
 
     <include
         android:id="@+id/main_include"
-        layout="@layout/activity_main"
+        layout="@layout/activity_main_and_bottom_navigation"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
@@ -22,8 +22,8 @@
         android:layout_height="match_parent"
         android:fitsSystemWindows="true"
         android:layout_gravity="start"
-        app:menu="@menu/drawer_main_menu"
-        app:headerLayout="@layout/header_menu">
+        app:menu="@menu/left_navigation_drawer_sidemenu"
+        app:headerLayout="@layout/left_navigation_drawer_header_menu">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -41,7 +41,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/create_new_category"
                 android:textAlignment="viewStart"
-                app:icon="@drawable/ic_add_todo"
+                app:icon="@drawable/plus_icon"
                 app:iconSize="50dp" />
 
         </LinearLayout>

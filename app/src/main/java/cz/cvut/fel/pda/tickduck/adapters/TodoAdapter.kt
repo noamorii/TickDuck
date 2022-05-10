@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import cz.cvut.fel.pda.tickduck.R
-import cz.cvut.fel.pda.tickduck.databinding.TaskBinding
+import cz.cvut.fel.pda.tickduck.databinding.TodoItemBinding
 import cz.cvut.fel.pda.tickduck.model.Todo
 
 class TodoAdapter(
@@ -23,7 +23,7 @@ class TodoAdapter(
     }
 
     class TaskHolder(view: View) : RecyclerView.ViewHolder(view) {
-        private val binding = TaskBinding.bind(view)
+        private val binding = TodoItemBinding.bind(view)
 
         fun setData(task: Todo, listener: Listener) = with(binding) {
             taskTitle.text = task.name
@@ -38,7 +38,7 @@ class TodoAdapter(
             fun create(parent: ViewGroup): TaskHolder {
                 return TaskHolder(
                     LayoutInflater.from(parent.context)
-                        .inflate(R.layout.task, parent, false))
+                        .inflate(R.layout.todo_item, parent, false))
             }
         }
     }
