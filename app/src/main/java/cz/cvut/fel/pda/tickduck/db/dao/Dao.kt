@@ -1,7 +1,9 @@
 package cz.cvut.fel.pda.tickduck.db.dao
 
-import androidx.room.*
 import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.Query
+import androidx.room.Update
 import cz.cvut.fel.pda.tickduck.model.Category
 import cz.cvut.fel.pda.tickduck.model.Todo
 import kotlinx.coroutines.flow.Flow
@@ -14,6 +16,9 @@ interface Dao {
 
     @Query ("SELECT * FROM Todos")
     fun getAllTodos(): Flow<List<Todo>>
+
+    @Query ("SELECT * FROM Categories WHERE name IS :name")
+    suspend fun findCategory(name: String): List<Category>
 
     @Insert
     suspend fun insertCategory(category: Category)
