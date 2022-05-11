@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import cz.cvut.fel.pda.tickduck.db.dao.CategoryDao
 import cz.cvut.fel.pda.tickduck.db.dao.Dao
 import cz.cvut.fel.pda.tickduck.model.Category
 import cz.cvut.fel.pda.tickduck.model.Todo
@@ -13,6 +14,8 @@ import cz.cvut.fel.pda.tickduck.model.User
 abstract class MainDB : RoomDatabase() {
 
     abstract fun getDao(): Dao
+
+    abstract fun getCategoryDao(): CategoryDao
 
     companion object {
         @Volatile

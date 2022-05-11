@@ -17,8 +17,8 @@ import cz.cvut.fel.pda.tickduck.MainApp
 import cz.cvut.fel.pda.tickduck.activities.NewTodoActivity
 import cz.cvut.fel.pda.tickduck.adapters.CalendarAdapter
 import cz.cvut.fel.pda.tickduck.databinding.NewCalednarFragmentBinding
-import cz.cvut.fel.pda.tickduck.db.viewmodels.MainViewModel
-import cz.cvut.fel.pda.tickduck.db.viewmodels.factories.MainViewModelFactory
+import cz.cvut.fel.pda.tickduck.db.viewmodels.TodoViewModel
+import cz.cvut.fel.pda.tickduck.db.viewmodels.TodoViewModelFactory
 import cz.cvut.fel.pda.tickduck.model.Todo
 import java.time.LocalDate
 import java.time.YearMonth
@@ -39,8 +39,8 @@ class CalendarFragment : BaseFragment(), CalendarAdapter.OnItemListener {
         fun newInstance() = CalendarFragment()
     }
 
-    private val mainViewModel: MainViewModel by activityViewModels {
-        MainViewModelFactory((context?.applicationContext as MainApp).database)
+    private val todoViewModel: TodoViewModel by activityViewModels {
+        TodoViewModelFactory((context?.applicationContext as MainApp).database)
     }
 
     override fun onClickNew() {
@@ -56,7 +56,7 @@ class CalendarFragment : BaseFragment(), CalendarAdapter.OnItemListener {
         editLauncher = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == Activity.RESULT_OK) {
-                mainViewModel.insertTodo(it.data?.getSerializableExtra("new_todo") as Todo)
+                todoViewModel.insertTodo(it.data?.getSerializableExtra("new_todo") as Todo)
             }
         }
     }

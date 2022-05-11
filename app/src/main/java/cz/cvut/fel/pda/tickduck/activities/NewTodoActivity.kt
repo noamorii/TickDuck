@@ -7,10 +7,17 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import cz.cvut.fel.pda.tickduck.MainApp
 import cz.cvut.fel.pda.tickduck.R
 import cz.cvut.fel.pda.tickduck.databinding.ActivityNewTodoBinding
+import cz.cvut.fel.pda.tickduck.db.viewmodels.CategoryViewModel
+import cz.cvut.fel.pda.tickduck.db.viewmodels.CategoryViewModelFactory
+import cz.cvut.fel.pda.tickduck.model.Category
 import cz.cvut.fel.pda.tickduck.model.Todo
 import cz.cvut.fel.pda.tickduck.model.enums.FlagType
 import java.text.SimpleDateFormat
@@ -19,11 +26,15 @@ import java.time.LocalTime
 import java.util.*
 
 
-class NewTodoActivity : AppCompatActivity() {
+class NewTodoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener  {
 
     companion object {
         private const val DATE_PATTERN = "dd.MM."
         private const val DATE_TIME_PATTERN = "$DATE_PATTERN, HH:mm aa"
+    }
+
+    private val categoryViewModel: CategoryViewModel by viewModels {
+        CategoryViewModelFactory((this.applicationContext as MainApp).categoryRepository)
     }
 
     private lateinit var binding: ActivityNewTodoBinding
@@ -70,7 +81,7 @@ class NewTodoActivity : AppCompatActivity() {
                 userId = 1,
                 time = localTime?.toString(),
                 date = localDate?.toString(),
-                imgName = "idk",
+                imgName = "idk", // todo
                 idCategory = binding.edCategory.id
                 )
             )
@@ -79,11 +90,20 @@ class NewTodoActivity : AppCompatActivity() {
     }
 
     private fun initCategorySpinner() {
-        binding.edCategory.adapter = ArrayAdapter(
-            this,
+        val categoryList = mutableListOf<String>()
+        val adapter = ArrayAdapter(
+            this@NewTodoActivity,
             android.R.layout.simple_spinner_dropdown_item,
-            listOf("cat_A", "cat_B", "cat_C") //todo
+            categoryList
         )
+        binding.edCategory.adapter = adapter
+
+        categoryViewModel.categoriesLiveData.observe(this) {
+            it.forEach { cat ->
+                categoryList.add(cat.name)
+            }
+            adapter.notifyDataSetChanged()
+        }
     }
 
     private fun initCalendar() {
@@ -144,5 +164,13 @@ class NewTodoActivity : AppCompatActivity() {
                 this.show()
             }
         }
+    }
+
+    override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onNothingSelected(p0: AdapterView<*>?) {
+        TODO("Not yet implemented")
     }
 }

@@ -15,13 +15,13 @@ import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import cz.cvut.fel.pda.tickduck.MainApp
 import cz.cvut.fel.pda.tickduck.activities.NewTodoActivity
-import cz.cvut.fel.pda.tickduck.db.viewmodels.MainViewModel
+import cz.cvut.fel.pda.tickduck.db.viewmodels.TodoViewModel
 import cz.cvut.fel.pda.tickduck.adapters.TodoAdapter
 import cz.cvut.fel.pda.tickduck.model.Todo
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import cz.cvut.fel.pda.tickduck.databinding.RecycleViewFragmentBinding
-import cz.cvut.fel.pda.tickduck.db.viewmodels.factories.MainViewModelFactory
+import cz.cvut.fel.pda.tickduck.db.viewmodels.TodoViewModelFactory
 import java.util.*
 
 class TodoFragment : BaseFragment(), TodoAdapter.Listener {
@@ -35,8 +35,8 @@ class TodoFragment : BaseFragment(), TodoAdapter.Listener {
     private lateinit var editLauncher: ActivityResultLauncher<Intent>
     private lateinit var adapter: TodoAdapter
 
-    private val mainViewModel: MainViewModel by activityViewModels {
-        MainViewModelFactory((context?.applicationContext as MainApp).database)
+    private val todoViewModel: TodoViewModel by activityViewModels {
+        TodoViewModelFactory((context?.applicationContext as MainApp).database)
     }
 
     override fun onClickNew() {
@@ -49,7 +49,7 @@ class TodoFragment : BaseFragment(), TodoAdapter.Listener {
     }
 
     private fun filter(text: String) {
-        val list: List<Todo>? = mainViewModel.allTodos.value
+        val list: List<Todo>? = todoViewModel.allTodos.value
         val result: MutableList<Todo> = mutableListOf()
         if (list != null) {
             for (todo in list) {
@@ -66,7 +66,7 @@ class TodoFragment : BaseFragment(), TodoAdapter.Listener {
         editLauncher = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == Activity.RESULT_OK) {
-                mainViewModel.insertTodo(it.data?.getSerializableExtra("new_todo") as Todo)
+                todoViewModel.insertTodo(it.data?.getSerializableExtra("new_todo") as Todo)
             }
         }
     }
@@ -98,7 +98,7 @@ class TodoFragment : BaseFragment(), TodoAdapter.Listener {
     }
 
     private fun setObserver() {
-        mainViewModel.allTodos.observe(viewLifecycleOwner) {
+        todoViewModel.allTodos.observe(viewLifecycleOwner) {
             adapter.submitList(it)
         }
     }
@@ -111,11 +111,11 @@ class TodoFragment : BaseFragment(), TodoAdapter.Listener {
     }
 
     override fun onClickItem(task: Todo) {
-        mainViewModel.updateTodo(task)
+        todoViewModel.updateTodo(task)
     }
 
     override fun deleteTodo(id: Int) {
-        mainViewModel.deleteTodo(id)
+        todoViewModel.deleteTodo(id)
     }
 
     private val simpleCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
@@ -128,7 +128,7 @@ class TodoFragment : BaseFragment(), TodoAdapter.Listener {
         }
 
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-            val id: Int? = mainViewModel.allTodos.value?.get(viewHolder.adapterPosition)?.id
+            val id: Int? = todoViewModel.allTodos.value?.get(viewHolder.adapterPosition)?.id
             if (id != null) {
                 deleteTodo(id)
             }

@@ -16,7 +16,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
 import cz.cvut.fel.pda.tickduck.R
 import cz.cvut.fel.pda.tickduck.databinding.LeftNavigationDrawerBinding
-import cz.cvut.fel.pda.tickduck.db.viewmodels.MainViewModel
+import cz.cvut.fel.pda.tickduck.db.viewmodels.TodoViewModel
 import cz.cvut.fel.pda.tickduck.fragments.CalendarFragment
 import cz.cvut.fel.pda.tickduck.fragments.FragmentManager
 import cz.cvut.fel.pda.tickduck.fragments.TodoFragment
@@ -25,7 +25,7 @@ import cz.cvut.fel.pda.tickduck.model.Category
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: LeftNavigationDrawerBinding
-    private val viewModel: MainViewModel by viewModels()
+    private val viewModel: TodoViewModel by viewModels()
     private var areCategoriesLoaded = false
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -3,6 +3,8 @@ package cz.cvut.fel.pda.tickduck.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.BaseAdapter
+import android.widget.Spinner
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -11,45 +13,22 @@ import cz.cvut.fel.pda.tickduck.databinding.TodoItemBinding
 import cz.cvut.fel.pda.tickduck.model.Category
 
 class CategoryAdapter(
-    private val listener: Listener
-) : ListAdapter<Category, CategoryAdapter.CategoryHolder>(Comparator()) {
+    val categories: List<Category>
+) : BaseAdapter() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryHolder {
-        return CategoryHolder.create(parent)
+    override fun getCount(): Int {
+        TODO("Not yet implemented")
     }
 
-    override fun onBindViewHolder(holder: CategoryHolder, position: Int) {
-        holder.setData(getItem(position), listener)
+    override fun getItem(p0: Int): Any {
+        TODO("Not yet implemented")
     }
 
-    class CategoryHolder(view: View) : RecyclerView.ViewHolder(view) {
-        private val binding = TodoItemBinding.bind(view)
-
-        companion object {
-            fun create(parent: ViewGroup): CategoryHolder {
-                return CategoryHolder(LayoutInflater
-                    .from(parent.context)
-                    .inflate(R.layout.todo_item, parent, false)
-                )
-            }
-        }
-        fun setData(category: Category, listener: Listener) = with(binding) {
-            taskTitle.text = category.name
-        }
+    override fun getItemId(p0: Int): Long {
+        TODO("Not yet implemented")
     }
 
-    class Comparator : DiffUtil.ItemCallback<Category>() {
-        override fun areItemsTheSame(oldItem: Category, newItem: Category): Boolean {
-            return oldItem.id == newItem.id
-        }
-
-        override fun areContentsTheSame(oldItem: Category, newItem: Category): Boolean {
-            return oldItem.name == newItem.name
-        }
-    }
-
-    interface Listener {
-        fun onClickItem(category: Category)
-        fun deleteCategory(id: Int)
+    override fun getView(p0: Int, p1: View?, p2: ViewGroup?): View {
+        TODO("Not yet implemented")
     }
 }
