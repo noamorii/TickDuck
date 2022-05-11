@@ -12,12 +12,9 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import cz.cvut.fel.pda.tickduck.MainApp
 import cz.cvut.fel.pda.tickduck.R
 import cz.cvut.fel.pda.tickduck.databinding.ActivityNewTodoBinding
 import cz.cvut.fel.pda.tickduck.db.viewmodels.CategoryViewModel
-import cz.cvut.fel.pda.tickduck.db.viewmodels.CategoryViewModelFactory
-import cz.cvut.fel.pda.tickduck.model.Category
 import cz.cvut.fel.pda.tickduck.model.Todo
 import cz.cvut.fel.pda.tickduck.model.enums.FlagType
 import java.text.SimpleDateFormat
@@ -34,7 +31,7 @@ class NewTodoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener 
     }
 
     private val categoryViewModel: CategoryViewModel by viewModels {
-        CategoryViewModelFactory((this.applicationContext as MainApp).categoryRepository)
+        CategoryViewModel.CategoryViewModelFactory(this)
     }
 
     private lateinit var binding: ActivityNewTodoBinding
@@ -140,8 +137,8 @@ class NewTodoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener 
         }
 
         val timeSetListener = TimePickerDialog.OnTimeSetListener { _, hour, minute ->
-            calendar.set(Calendar.HOUR_OF_DAY, hour)
-            calendar.set(Calendar.MINUTE, minute)
+            calendar[Calendar.HOUR_OF_DAY] = hour
+            calendar[Calendar.MINUTE] = minute
             updateLabel(DATE_TIME_PATTERN)
             setLocalDateAndTime()
         }
@@ -149,11 +146,11 @@ class NewTodoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener 
         edDateField.setOnClickListener {
             DatePickerDialog(this,
                 dateSetListener,
-                calendar.get(Calendar.YEAR),
-                calendar.get(Calendar.MONTH),
-                calendar.get(Calendar.DAY_OF_MONTH)
+                calendar[Calendar.YEAR],
+                calendar[Calendar.MONTH],
+                calendar[Calendar.DAY_OF_MONTH]
             ).apply {
-                this.setButton(DialogInterface.BUTTON_NEUTRAL, "Time") { _, _ ->
+                setButton(DialogInterface.BUTTON_NEUTRAL, "Time") { _, _ ->
                     TimePickerDialog(this@NewTodoActivity,
                         timeSetListener,
                         calendar[Calendar.HOUR],
@@ -161,7 +158,7 @@ class NewTodoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener 
                         false
                     ).show()
                 }
-                this.show()
+                show()
             }
         }
     }

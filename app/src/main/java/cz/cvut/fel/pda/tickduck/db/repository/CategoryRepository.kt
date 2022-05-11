@@ -16,8 +16,13 @@ class CategoryRepository(
     }
 
     @WorkerThread
-    suspend fun delete(category: Category) {
-        categoryDao.delete(category)
+    suspend fun delete(id: Int) {
+        categoryDao.delete(id)
     }
 
+    @WorkerThread
+    fun existsByName(name: String): Boolean {
+        return categoryDao.getAll().map { it.name }
+            .contains(name)
+    }
 }

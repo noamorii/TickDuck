@@ -14,6 +14,7 @@ import android.widget.ImageButton
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.fragment.app.activityViewModels
 import cz.cvut.fel.pda.tickduck.R
 import cz.cvut.fel.pda.tickduck.databinding.LeftNavigationDrawerBinding
 import cz.cvut.fel.pda.tickduck.db.viewmodels.TodoViewModel
@@ -25,7 +26,10 @@ import cz.cvut.fel.pda.tickduck.model.Category
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: LeftNavigationDrawerBinding
-    private val viewModel: TodoViewModel by viewModels()
+    private val todoViewModel: TodoViewModel by viewModels {
+        TodoViewModel.TodoViewModelFactory(this)
+    }
+
     private var areCategoriesLoaded = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -100,8 +104,8 @@ class MainActivity : AppCompatActivity() {
         val createButton: ImageButton = dialog.findViewById(R.id.create_category_button)
         createButton.setOnClickListener {
             val name: String = dialog.findViewById<EditText?>(R.id.newCategoryName).text.toString()
-            if (!viewModel.categoryExists(name)) {
-                viewModel.insertCategory(
+            if (!todoViewModel.categoryExists(name).start()) {
+                todoViewModel.insertCategory(
                     Category(null, name, 0)
                 )
                 binding.drawerNavView.menu.add(name)
@@ -113,9 +117,9 @@ class MainActivity : AppCompatActivity() {
     private fun loadCategories() {
         binding.drawerLayout.addDrawerListener(object : DrawerLayout.DrawerListener {
             override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
-                viewModel.allCategories.observe(this@MainActivity){}
+                todoViewModel.allCategoriesLiveData.observe(this@MainActivity){}
                 if (!areCategoriesLoaded) {
-                    val categories = viewModel.allCategories.value
+                    val categories = todoViewModel.allCategoriesLiveData.value
                     if (categories != null) {
                         for (category: Category in categories) {
                             binding.drawerNavView.menu.add(category.name)

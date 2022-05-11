@@ -13,12 +13,10 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import cz.cvut.fel.pda.tickduck.MainApp
 import cz.cvut.fel.pda.tickduck.activities.NewTodoActivity
 import cz.cvut.fel.pda.tickduck.adapters.CalendarAdapter
 import cz.cvut.fel.pda.tickduck.databinding.NewCalednarFragmentBinding
 import cz.cvut.fel.pda.tickduck.db.viewmodels.TodoViewModel
-import cz.cvut.fel.pda.tickduck.db.viewmodels.TodoViewModelFactory
 import cz.cvut.fel.pda.tickduck.model.Todo
 import java.time.LocalDate
 import java.time.YearMonth
@@ -40,7 +38,7 @@ class CalendarFragment : BaseFragment(), CalendarAdapter.OnItemListener {
     }
 
     private val todoViewModel: TodoViewModel by activityViewModels {
-        TodoViewModelFactory((context?.applicationContext as MainApp).database)
+        TodoViewModel.TodoViewModelFactory(requireContext())
     }
 
     override fun onClickNew() {

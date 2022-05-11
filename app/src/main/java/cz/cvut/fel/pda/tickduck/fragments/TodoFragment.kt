@@ -13,7 +13,6 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import cz.cvut.fel.pda.tickduck.MainApp
 import cz.cvut.fel.pda.tickduck.activities.NewTodoActivity
 import cz.cvut.fel.pda.tickduck.db.viewmodels.TodoViewModel
 import cz.cvut.fel.pda.tickduck.adapters.TodoAdapter
@@ -21,7 +20,6 @@ import cz.cvut.fel.pda.tickduck.model.Todo
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import cz.cvut.fel.pda.tickduck.databinding.RecycleViewFragmentBinding
-import cz.cvut.fel.pda.tickduck.db.viewmodels.TodoViewModelFactory
 import java.util.*
 
 class TodoFragment : BaseFragment(), TodoAdapter.Listener {
@@ -36,7 +34,7 @@ class TodoFragment : BaseFragment(), TodoAdapter.Listener {
     private lateinit var adapter: TodoAdapter
 
     private val todoViewModel: TodoViewModel by activityViewModels {
-        TodoViewModelFactory((context?.applicationContext as MainApp).database)
+        TodoViewModel.TodoViewModelFactory(requireContext())
     }
 
     override fun onClickNew() {
@@ -49,7 +47,7 @@ class TodoFragment : BaseFragment(), TodoAdapter.Listener {
     }
 
     private fun filter(text: String) {
-        val list: List<Todo>? = todoViewModel.allTodos.value
+        val list: List<Todo>? = todoViewModel.allTodosLiveData.value
         val result: MutableList<Todo> = mutableListOf()
         if (list != null) {
             for (todo in list) {
@@ -98,7 +96,7 @@ class TodoFragment : BaseFragment(), TodoAdapter.Listener {
     }
 
     private fun setObserver() {
-        todoViewModel.allTodos.observe(viewLifecycleOwner) {
+        todoViewModel.allTodosLiveData.observe(viewLifecycleOwner) {
             adapter.submitList(it)
         }
     }
@@ -128,7 +126,7 @@ class TodoFragment : BaseFragment(), TodoAdapter.Listener {
         }
 
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-            val id: Int? = todoViewModel.allTodos.value?.get(viewHolder.adapterPosition)?.id
+            val id: Int? = todoViewModel.allTodosLiveData.value?.get(viewHolder.adapterPosition)?.id
             if (id != null) {
                 deleteTodo(id)
             }

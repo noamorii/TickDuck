@@ -1,50 +1,57 @@
 package cz.cvut.fel.pda.tickduck.db.viewmodels
 
+import android.content.Context
 import androidx.lifecycle.*
-import cz.cvut.fel.pda.tickduck.db.MainDB
+import cz.cvut.fel.pda.tickduck.MainApp
+import cz.cvut.fel.pda.tickduck.db.repository.CategoryRepository
+import cz.cvut.fel.pda.tickduck.db.repository.TodoRepository
 import cz.cvut.fel.pda.tickduck.model.Category
 import cz.cvut.fel.pda.tickduck.model.Todo
 import kotlinx.coroutines.launch
 import java.lang.IllegalArgumentException
 
 class TodoViewModel(
-    database: MainDB
+    private val todoRepository: TodoRepository,
+    private val categoryRepository: CategoryRepository
 ) : ViewModel() {
-    private val dao = database.getDao()
 
-    val allCategories = dao.getAllCategoriesFlow().asLiveData()
-    val allTodos = dao.getAllTodos().asLiveData()
+    val allCategoriesLiveData = categoryRepository.allCategories.asLiveData()
+    val allTodosLiveData = todoRepository.allTodos.asLiveData()
 
     fun insertTodo(todo: Todo) = viewModelScope.launch {
-        dao.insertTodo(todo)
-    }
-
-    fun insertCategory(category: Category) = viewModelScope.launch {
-        dao.insertCategory(category)
+        todoRepository.insert(todo)
     }
 
     fun updateTodo(todo: Todo) = viewModelScope.launch {
-        dao.updateTodo(todo)
+        todoRepository.update(todo)
     }
 
     fun deleteTodo(id: Int) = viewModelScope.launch {
-        dao.deleteTodo(id)
+        todoRepository.delete(id)
     }
 
-    fun categoryExists(name: String): Boolean {
-        return allCategories.value?.map { it.name }!!
-            .contains(name)
+    fun insertCategory(category: Category) = viewModelScope.launch {
+        categoryRepository.insert(category)
     }
-}
 
-class TodoViewModelFactory(
-    private val database: MainDB
-) : ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(TodoViewModel::class.java)) {
-            @Suppress("Unchecked_cast")
-            return TodoViewModel(database) as T
+    fun categoryExists(name: String) = viewModelScope.launch {
+        categoryRepository.existsByName(name)
+    }
+
+    class TodoViewModelFactory(
+        private val context: Context
+    ) : ViewModelProvider.Factory {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            if (modelClass.isAssignableFrom(TodoViewModel::class.java)) {
+                val mainApp = context.applicationContext as MainApp
+
+                @Suppress("Unchecked_cast")
+                return TodoViewModel(
+                    TodoRepository(mainApp.todoDao),
+                    CategoryRepository(mainApp.categoryDao)
+                ) as T
+            }
+            throw IllegalArgumentException("Unknown_ViewModelClass")
         }
-        throw IllegalArgumentException("Unknown_ViewModelClass")
     }
 }

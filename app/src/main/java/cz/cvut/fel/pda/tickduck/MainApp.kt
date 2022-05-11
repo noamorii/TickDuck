@@ -7,7 +7,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 
 class MainApp : Application() {
-    val database by lazy { MainDB.getDB(this) }
-    val categoryRepository by lazy { CategoryRepository(database.getCategoryDao()) }
-
+    private val database by lazy { MainDB.getDB(this) }
+    val categoryDao by lazy { database.getCategoryDao() }
+    val todoDao by lazy { database.getTodoDao() }
 }

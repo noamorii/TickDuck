@@ -13,10 +13,13 @@ interface CategoryDao {
     @Query("SELECT * FROM Categories ORDER BY clickCounter DESC")
     fun getAllCategoriesFlow(): Flow<List<Category>>
 
+    @Query("SELECT * FROM Categories ORDER BY clickCounter DESC")
+    fun getAll(): List<Category>
+
     @Insert
     suspend fun insertCategory(vararg category: Category)
 
-    @Delete
-    suspend fun delete(category: Category)
+    @Query ("DELETE FROM categories WHERE id IS :id")
+    suspend fun delete(id: Int)
 
 }
