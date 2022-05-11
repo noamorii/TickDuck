@@ -13,8 +13,8 @@ interface CategoryDao {
     @Query("SELECT * FROM Categories ORDER BY clickCounter DESC")
     fun getAllCategoriesFlow(): Flow<List<Category>>
 
-    @Query("SELECT * FROM Categories ORDER BY clickCounter DESC")
-    fun getAll(): List<Category>
+    @Query("SELECT EXISTS(SELECT * FROM categories WHERE name = :name)")
+    fun existsByName(name : String) : Boolean
 
     @Insert
     suspend fun insertCategory(vararg category: Category)

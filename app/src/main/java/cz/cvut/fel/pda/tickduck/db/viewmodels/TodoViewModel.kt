@@ -34,8 +34,9 @@ class TodoViewModel(
         categoryRepository.insert(category)
     }
 
-    fun categoryExists(name: String) = viewModelScope.launch {
-        categoryRepository.existsByName(name)
+    fun categoryExists(name: String): Boolean {
+        return allCategoriesLiveData.value?.map { it.name }!!
+            .contains(name)
     }
 
     class TodoViewModelFactory(

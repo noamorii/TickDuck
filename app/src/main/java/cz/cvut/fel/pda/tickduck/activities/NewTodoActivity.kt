@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity
 import cz.cvut.fel.pda.tickduck.R
 import cz.cvut.fel.pda.tickduck.databinding.ActivityNewTodoBinding
 import cz.cvut.fel.pda.tickduck.db.viewmodels.CategoryViewModel
+import cz.cvut.fel.pda.tickduck.model.Category
 import cz.cvut.fel.pda.tickduck.model.Todo
 import cz.cvut.fel.pda.tickduck.model.enums.FlagType
 import java.text.SimpleDateFormat
@@ -23,7 +24,7 @@ import java.time.LocalTime
 import java.util.*
 
 
-class NewTodoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener  {
+class NewTodoActivity : AppCompatActivity() {
 
     companion object {
         private const val DATE_PATTERN = "dd.MM."
@@ -79,7 +80,7 @@ class NewTodoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener 
                 time = localTime?.toString(),
                 date = localDate?.toString(),
                 imgName = "idk", // todo
-                idCategory = binding.edCategory.id
+                idCategory = (binding.edCategory.selectedItem as CategoryWrapper).category.id!!
                 )
             )
         }
@@ -87,7 +88,7 @@ class NewTodoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener 
     }
 
     private fun initCategorySpinner() {
-        val categoryList = mutableListOf<String>()
+        val categoryList = mutableListOf<CategoryWrapper>()
         val adapter = ArrayAdapter(
             this@NewTodoActivity,
             android.R.layout.simple_spinner_dropdown_item,
@@ -97,7 +98,7 @@ class NewTodoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener 
 
         categoryViewModel.categoriesLiveData.observe(this) {
             it.forEach { cat ->
-                categoryList.add(cat.name)
+                categoryList.add(CategoryWrapper(cat))
             }
             adapter.notifyDataSetChanged()
         }
@@ -163,11 +164,11 @@ class NewTodoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener 
         }
     }
 
-    override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-        TODO("Not yet implemented")
-    }
-
-    override fun onNothingSelected(p0: AdapterView<*>?) {
-        TODO("Not yet implemented")
+    class CategoryWrapper(
+        val category: Category
+    ) {
+        override fun toString(): String {
+            return category.name
+        }
     }
 }

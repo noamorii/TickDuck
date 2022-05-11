@@ -104,7 +104,7 @@ class MainActivity : AppCompatActivity() {
         val createButton: ImageButton = dialog.findViewById(R.id.create_category_button)
         createButton.setOnClickListener {
             val name: String = dialog.findViewById<EditText?>(R.id.newCategoryName).text.toString()
-            if (!todoViewModel.categoryExists(name).start()) {
+            if (!todoViewModel.categoryExists(name)) {
                 todoViewModel.insertCategory(
                     Category(null, name, 0)
                 )

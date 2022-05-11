@@ -22,7 +22,6 @@ class CategoryRepository(
 
     @WorkerThread
     fun existsByName(name: String): Boolean {
-        return categoryDao.getAll().map { it.name }
-            .contains(name)
+        return categoryDao.existsByName(name)
     }
 }
