@@ -14,4 +14,16 @@
     <string name="all_categories">All categories</string>
     <string name="category_name">Category name</string>
     <string name="splash_welcome">Welcome</string>
+    <string name="search">Search</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="Previous_month">prev</string>
+    <string name="Next_month">next</string>
+    <string name="Sunday">sun</string>
+    <string name="Monday">mon</string>
+    <string name="Tuesday">tue</string>
+    <string name="Wednesday">wed</string>
+    <string name="Thursday">thur</string>
+    <string name="Friday">fri</string>
+    <string name="Saturday">sat</string>
 </resources>

@@ -15,10 +15,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="56dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="32dp"
             android:layout_marginRight="56dp"
             android:layout_marginBottom="16dp"
-            android:inputType="text" />
+            android:background="@drawable/gradient_search"
+            android:hint="@string/search"
+            android:inputType="text"
+            android:paddingLeft="16dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rcViewTodos"

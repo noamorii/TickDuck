@@ -17,6 +17,7 @@ import androidx.drawerlayout.widget.DrawerLayout
 import cz.cvut.fel.pda.tickduck.R
 import cz.cvut.fel.pda.tickduck.databinding.LeftNavigationDrawerBinding
 import cz.cvut.fel.pda.tickduck.db.viewmodels.MainViewModel
+import cz.cvut.fel.pda.tickduck.fragments.CalendarFragment
 import cz.cvut.fel.pda.tickduck.fragments.FragmentManager
 import cz.cvut.fel.pda.tickduck.fragments.TodoFragment
 import cz.cvut.fel.pda.tickduck.model.Category
@@ -44,7 +45,7 @@ class MainActivity : AppCompatActivity() {
                     Log.d("Log", "Settings")
                 }
                 R.id.calendar -> {
-                    Log.d("Log", "Calendar")
+                    FragmentManager.setFragment(CalendarFragment.newInstance(), this)
                 }
                 R.id.todayTodos -> {
                     FragmentManager.setFragment(TodoFragment.newInstance(), this)
