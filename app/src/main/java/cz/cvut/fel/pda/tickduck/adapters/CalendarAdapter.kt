@@ -33,9 +33,7 @@ class CalendarAdapter (
         private var onItemListener: OnItemListener
     ) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
 
-        init {
-            itemView.setOnClickListener(this)
-        }
+        init { itemView.setOnClickListener(this) }
 
         var dayOfMonth: TextView = itemView.findViewById(R.id.cellDayText)
 
@@ -44,7 +42,7 @@ class CalendarAdapter (
                 val layoutView = LayoutInflater
                     .from(parent.context)
                     .inflate(R.layout.calendar_cell, parent, false)
-                layoutView.layoutParams.height = (parent.height * 0.166666666).toInt()
+                layoutView.layoutParams.height = (parent.height * 0.166666).toInt()
                 return CalendarViewHolder(layoutView, onItemListener)
             }
         }

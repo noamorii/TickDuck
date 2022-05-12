@@ -6,15 +6,21 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.findFragment
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import cz.cvut.fel.pda.tickduck.R
 import cz.cvut.fel.pda.tickduck.activities.NewTodoActivity
 import cz.cvut.fel.pda.tickduck.adapters.CalendarAdapter
+import cz.cvut.fel.pda.tickduck.adapters.TodoAdapter
 import cz.cvut.fel.pda.tickduck.databinding.NewCalednarFragmentBinding
 import cz.cvut.fel.pda.tickduck.db.viewmodels.TodoViewModel
 import cz.cvut.fel.pda.tickduck.model.Todo
@@ -25,10 +31,11 @@ import java.time.YearMonth
 import java.time.format.DateTimeFormatter
 
 
-class CalendarFragment : BaseFragment(), CalendarAdapter.OnItemListener {
+class CalendarFragment : BaseFragment(), TodoAdapter.Listener, CalendarAdapter.OnItemListener {
 
     private lateinit var binding: NewCalednarFragmentBinding
-    private lateinit var adapter: CalendarAdapter
+    private lateinit var calendarAdapter: CalendarAdapter
+    private lateinit var todoAdapter: TodoAdapter
     private lateinit var editLauncher: ActivityResultLauncher<Intent>
     private lateinit var monthYearText: TextView
     private lateinit var calendarRecyclerView: RecyclerView
@@ -73,7 +80,39 @@ class CalendarFragment : BaseFragment(), CalendarAdapter.OnItemListener {
         super.onViewCreated(view, savedInstanceState)
         initWidgets()
         setMonthView()
+        initRCView()
+        setObserver()
         setButtonsListener()
+    }
+
+    private fun initRCView() = with(binding) {
+        todoRecyclerView.layoutManager = LinearLayoutManager(activity)
+        todoAdapter = TodoAdapter(this@CalendarFragment)
+        ItemTouchHelper(simpleCallback).attachToRecyclerView(todoRecyclerView)
+        todoRecyclerView.adapter = todoAdapter
+    }
+
+    private fun setObserver() {
+        todoViewModel.allTodosLiveData.observe(viewLifecycleOwner) {
+            todoAdapter.submitList(it)
+        }
+    }
+
+    private val simpleCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+        override fun onMove(
+            recyclerView: RecyclerView,
+            viewHolder: RecyclerView.ViewHolder,
+            target: RecyclerView.ViewHolder
+        ): Boolean {
+            TODO("Not yet implemented")
+        }
+
+        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+            val id: Int? = todoViewModel.allTodosLiveData.value?.get(viewHolder.adapterPosition)?.id
+            if (id != null) {
+                deleteTodo(id)
+            }
+        }
     }
 
     private fun setButtonsListener() {
@@ -93,11 +132,11 @@ class CalendarFragment : BaseFragment(), CalendarAdapter.OnItemListener {
     private fun setMonthView() {
         monthYearText.text = monthYearFromDate(selectedDate)
         val daysInMonth: ArrayList<String> = daysInMonthArray(selectedDate)
-        adapter = CalendarAdapter(daysInMonth, this)
+        calendarAdapter = CalendarAdapter(daysInMonth, this)
         val layoutManager: RecyclerView.LayoutManager =
             GridLayoutManager(activity, 7)
         calendarRecyclerView.layoutManager = layoutManager
-        calendarRecyclerView.adapter = adapter
+        calendarRecyclerView.adapter = calendarAdapter
     }
 
     private fun daysInMonthArray(date: LocalDate): ArrayList<String> {
@@ -116,6 +155,24 @@ class CalendarFragment : BaseFragment(), CalendarAdapter.OnItemListener {
         return date.format(formatter)
     }
 
+    private fun previousMonthAction(view: View?) {
+        selectedDate = selectedDate.minusMonths(1)
+        setMonthView()
+    }
+
+    private fun nextMonthAction(view: View?) {
+        selectedDate = selectedDate.plusMonths(1)
+        setMonthView()
+    }
+
+    override fun onClickItem(task: Todo) {
+        todoViewModel.updateTodo(task)
+    }
+
+    override fun deleteTodo(id: Int) {
+        todoViewModel.deleteTodo(id)
+    }
+
     override fun onItemClick(position: Int, dayText: String?) {
         if (!dayText.equals("")) {
             val message =
@@ -123,16 +180,4 @@ class CalendarFragment : BaseFragment(), CalendarAdapter.OnItemListener {
             Toast.makeText(context?.applicationContext, message, Toast.LENGTH_LONG).show()
         }
     }
-
-    fun previousMonthAction(view: View?) {
-        selectedDate = selectedDate.minusMonths(1)
-        setMonthView()
-    }
-
-    fun nextMonthAction(view: View?) {
-        selectedDate = selectedDate.plusMonths(1)
-        setMonthView()
-    }
-
-
 }

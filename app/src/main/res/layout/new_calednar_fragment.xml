@@ -49,76 +49,87 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginBottom="8dp">
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="8dp"
+        android:orientation="horizontal">
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/Sunday"
-            android:textColor="@color/white"
             android:textAlignment="center"
-            android:textSize="16sp"/>
+            android:textColor="@color/white"
+            android:textSize="16sp" />
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/Monday"
-            android:textColor="@color/white"
             android:textAlignment="center"
-            android:textSize="16sp"/>
+            android:textColor="@color/white"
+            android:textSize="16sp" />
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/Tuesday"
-            android:textColor="@color/white"
             android:textAlignment="center"
-            android:textSize="16sp"/>
+            android:textColor="@color/white"
+            android:textSize="16sp" />
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/Wednesday"
-            android:textColor="@color/white"
             android:textAlignment="center"
-            android:textSize="16sp"/>
+            android:textColor="@color/white"
+            android:textSize="16sp" />
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/Thursday"
-            android:textColor="@color/white"
             android:textAlignment="center"
-            android:textSize="16sp"/>
+            android:textColor="@color/white"
+            android:textSize="16sp" />
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/Friday"
-            android:textColor="@color/white"
             android:textAlignment="center"
-            android:textSize="16sp"/>
+            android:textColor="@color/white"
+            android:textSize="16sp" />
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/Saturday"
-            android:textColor="@color/white"
             android:textAlignment="center"
-            android:textSize="16sp"/>
+            android:textColor="@color/white"
+            android:textSize="16sp" />
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/calendarRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="220dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp" >
+
+    </androidx.recyclerview.widget.RecyclerView>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/todoRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </LinearLayout>
