@@ -20,6 +20,8 @@ import cz.cvut.fel.pda.tickduck.model.Todo
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import cz.cvut.fel.pda.tickduck.databinding.RecycleViewFragmentBinding
+import cz.cvut.fel.pda.tickduck.model.intentDTO.NewTodoDTO
+import cz.cvut.fel.pda.tickduck.utils.SerializableExtras.NEW_TODO_DTO
 import java.util.*
 
 class TodoFragment : BaseFragment(), TodoAdapter.Listener {
@@ -64,7 +66,7 @@ class TodoFragment : BaseFragment(), TodoAdapter.Listener {
         editLauncher = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == Activity.RESULT_OK) {
-                todoViewModel.insertTodo(it.data?.getSerializableExtra("new_todo") as Todo)
+                todoViewModel.insertTodo(it.data?.getSerializableExtra(NEW_TODO_DTO) as NewTodoDTO)
             }
         }
     }

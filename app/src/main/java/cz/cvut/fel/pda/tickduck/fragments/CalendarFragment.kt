@@ -18,6 +18,8 @@ import cz.cvut.fel.pda.tickduck.adapters.CalendarAdapter
 import cz.cvut.fel.pda.tickduck.databinding.NewCalednarFragmentBinding
 import cz.cvut.fel.pda.tickduck.db.viewmodels.TodoViewModel
 import cz.cvut.fel.pda.tickduck.model.Todo
+import cz.cvut.fel.pda.tickduck.model.intentDTO.NewTodoDTO
+import cz.cvut.fel.pda.tickduck.utils.SerializableExtras.NEW_TODO_DTO
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter
@@ -54,7 +56,7 @@ class CalendarFragment : BaseFragment(), CalendarAdapter.OnItemListener {
         editLauncher = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == Activity.RESULT_OK) {
-                todoViewModel.insertTodo(it.data?.getSerializableExtra("new_todo") as Todo)
+                todoViewModel.insertTodo(it.data?.getSerializableExtra(NEW_TODO_DTO) as NewTodoDTO)
             }
         }
     }

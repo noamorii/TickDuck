@@ -10,8 +10,8 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface CategoryDao {
 
-    @Query("SELECT * FROM Categories ORDER BY clickCounter DESC")
-    fun getAllCategoriesFlow(): Flow<List<Category>>
+    @Query("SELECT * FROM Categories WHERE userId = :userId ORDER BY clickCounter DESC")
+    fun getAllCategoriesFlow(userId: Int): Flow<List<Category>>
 
     @Query("SELECT EXISTS(SELECT * FROM categories WHERE name = :name)")
     fun existsByName(name : String) : Boolean

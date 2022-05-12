@@ -7,8 +7,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
-import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -18,6 +16,8 @@ import cz.cvut.fel.pda.tickduck.db.viewmodels.CategoryViewModel
 import cz.cvut.fel.pda.tickduck.model.Category
 import cz.cvut.fel.pda.tickduck.model.Todo
 import cz.cvut.fel.pda.tickduck.model.enums.FlagType
+import cz.cvut.fel.pda.tickduck.model.intentDTO.NewTodoDTO
+import cz.cvut.fel.pda.tickduck.utils.SerializableExtras.NEW_TODO_DTO
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.LocalTime
@@ -72,14 +72,12 @@ class NewTodoActivity : AppCompatActivity() {
 
     private fun setResult() {
         val intent = Intent().apply {
-            putExtra("new_todo", Todo(
+            putExtra(NEW_TODO_DTO, NewTodoDTO(
                 name = binding.edTask.text.toString(),
                 description = binding.edDescription.text.toString(),
                 flagInfo = FlagType.BLUE,
-                userId = 1,
                 time = localTime?.toString(),
                 date = localDate?.toString(),
-                imgName = "idk", // todo
                 idCategory = (binding.edCategory.selectedItem as CategoryWrapper).category.id!!
                 )
             )

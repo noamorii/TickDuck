@@ -1,25 +1,43 @@
 package cz.cvut.fel.pda.tickduck.db.viewmodels
 
 import android.content.Context
+import android.content.SharedPreferences
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.*
 import cz.cvut.fel.pda.tickduck.MainApp
 import cz.cvut.fel.pda.tickduck.db.repository.CategoryRepository
 import cz.cvut.fel.pda.tickduck.db.repository.TodoRepository
 import cz.cvut.fel.pda.tickduck.model.Category
 import cz.cvut.fel.pda.tickduck.model.Todo
+import cz.cvut.fel.pda.tickduck.model.intentDTO.NewTodoDTO
+import cz.cvut.fel.pda.tickduck.utils.SharedPreferencesKeys.CURRENT_USER_ID
+import cz.cvut.fel.pda.tickduck.utils.SharedPreferencesKeys.CURRENT_USER_PREFERENCES
+import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.launch
 import java.lang.IllegalArgumentException
 
 class TodoViewModel(
     private val todoRepository: TodoRepository,
-    private val categoryRepository: CategoryRepository
+    private val categoryRepository: CategoryRepository,
+    loggedInSharedPreferences: SharedPreferences
 ) : ViewModel() {
 
-    val allCategoriesLiveData = categoryRepository.allCategories.asLiveData()
-    val allTodosLiveData = todoRepository.allTodos.asLiveData()
+    private val loggedInUserId = loggedInSharedPreferences.getInt(CURRENT_USER_ID, 0)
 
-    fun insertTodo(todo: Todo) = viewModelScope.launch {
-        todoRepository.insert(todo)
+    val allCategoriesLiveData = categoryRepository.getAll(loggedInUserId).asLiveData()
+    val allTodosLiveData = todoRepository.getAll(loggedInUserId).asLiveData()
+
+    fun insertTodo(newTodoDTO: NewTodoDTO) = viewModelScope.launch {
+        val newTodo = Todo(
+            name = newTodoDTO.name,
+            description = newTodoDTO.description,
+            date = newTodoDTO.date,
+            time = newTodoDTO.time,
+            userId = loggedInUserId,
+            flagInfo = newTodoDTO.flagInfo,
+            idCategory = newTodoDTO.idCategory
+        )
+        todoRepository.insert(newTodo)
     }
 
     fun updateTodo(todo: Todo) = viewModelScope.launch {
@@ -30,8 +48,9 @@ class TodoViewModel(
         todoRepository.delete(id)
     }
 
-    fun insertCategory(category: Category) = viewModelScope.launch {
-        categoryRepository.insert(category)
+    fun insertCategory(categoryName: String) = viewModelScope.launch {
+        val newCategory = Category(userId = loggedInUserId, name = categoryName)
+        categoryRepository.insert(newCategory)
     }
 
     fun categoryExists(name: String): Boolean {
@@ -49,7 +68,8 @@ class TodoViewModel(
                 @Suppress("Unchecked_cast")
                 return TodoViewModel(
                     TodoRepository(mainApp.todoDao),
-                    CategoryRepository(mainApp.categoryDao)
+                    CategoryRepository(mainApp.categoryDao),
+                    context.getSharedPreferences(CURRENT_USER_PREFERENCES, AppCompatActivity.MODE_PRIVATE)
                 ) as T
             }
             throw IllegalArgumentException("Unknown_ViewModelClass")

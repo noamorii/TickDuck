@@ -4,13 +4,16 @@ import androidx.annotation.WorkerThread
 import androidx.lifecycle.viewModelScope
 import cz.cvut.fel.pda.tickduck.db.dao.TodoDao
 import cz.cvut.fel.pda.tickduck.model.Todo
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
 class TodoRepository(
     private val todoDao: TodoDao
 ) {
 
-    val allTodos = todoDao.getAllTodosFlow()
+    fun getAll(userId: Int): Flow<List<Todo>> {
+        return todoDao.getAllTodosFlow(userId)
+    }
 
     @WorkerThread
     suspend fun insert(vararg todo: Todo) {

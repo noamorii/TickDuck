@@ -4,8 +4,8 @@
     <solid
         android:color="@color/cardview_dark_background"/>
     <corners
-        android:topLeftRadius="30dp"
-        android:topRightRadius="30dp"/>
+        android:topLeftRadius="24dp"
+        android:topRightRadius="24dp"/>
     <padding
         android:left="30dp"
         android:right="30dp"

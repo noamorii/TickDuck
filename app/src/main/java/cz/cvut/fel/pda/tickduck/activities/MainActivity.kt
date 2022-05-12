@@ -5,16 +5,17 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
-import android.os.Bundle
+import android.os.*
 import android.util.Log
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageButton
+import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.fragment.app.activityViewModels
 import cz.cvut.fel.pda.tickduck.R
 import cz.cvut.fel.pda.tickduck.databinding.LeftNavigationDrawerBinding
 import cz.cvut.fel.pda.tickduck.db.viewmodels.TodoViewModel
@@ -22,6 +23,7 @@ import cz.cvut.fel.pda.tickduck.fragments.CalendarFragment
 import cz.cvut.fel.pda.tickduck.fragments.FragmentManager
 import cz.cvut.fel.pda.tickduck.fragments.TodoFragment
 import cz.cvut.fel.pda.tickduck.model.Category
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -74,11 +76,13 @@ class MainActivity : AppCompatActivity() {
         val dialog = Dialog(this)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setContentView(R.layout.new_category_popup)
+        dialog.window?.apply {
+            setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+            setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            attributes?.windowAnimations = R.style.DialogAnimation
+            setGravity(Gravity.BOTTOM)
+        }
         dialog.show()
-        dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        dialog.window?.attributes?.windowAnimations = R.style.DialogAnimation
-        dialog.window?.setGravity(Gravity.BOTTOM)
 
         setListenerOnCreateButton(dialog)
     }
@@ -103,15 +107,31 @@ class MainActivity : AppCompatActivity() {
     private fun setListenerOnCreateButton(dialog: Dialog) {
         val createButton: ImageButton = dialog.findViewById(R.id.create_category_button)
         createButton.setOnClickListener {
-            val name: String = dialog.findViewById<EditText?>(R.id.newCategoryName).text.toString()
+            val nameField = dialog.findViewById<EditText?>(R.id.newCategoryName)
+            nameField.requestFocus() // todo
+            val name: String = nameField.text.toString()
+
             if (!todoViewModel.categoryExists(name)) {
-                todoViewModel.insertCategory(
-                    Category(null, name, 0)
-                )
+                todoViewModel.insertCategory(name)
                 binding.drawerNavView.menu.add(name)
+                dialog.dismiss()
+            } else {
+                Toast.makeText(this, "Category \"$name\" already exists.", Toast.LENGTH_SHORT).show()
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    vibrate()
+                }
             }
-            dialog.dismiss()
         }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.S)
+    private fun vibrate() {
+        val vibratorManager = getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
+        vibratorManager.defaultVibrator.vibrate(
+            VibrationEffect.createOneShot(
+                250, VibrationEffect.DEFAULT_AMPLITUDE
+            )
+        )
     }
 
     private fun loadCategories() {

@@ -3,12 +3,16 @@ package cz.cvut.fel.pda.tickduck.db.repository
 import androidx.annotation.WorkerThread
 import cz.cvut.fel.pda.tickduck.db.dao.CategoryDao
 import cz.cvut.fel.pda.tickduck.model.Category
+import cz.cvut.fel.pda.tickduck.model.Todo
+import kotlinx.coroutines.flow.Flow
 
 class CategoryRepository(
     private val categoryDao: CategoryDao
 ) {
 
-    val allCategories = categoryDao.getAllCategoriesFlow()
+    fun getAll(userId: Int): Flow<List<Category>> {
+        return categoryDao.getAllCategoriesFlow(userId)
+    }
 
     @WorkerThread
     suspend fun insert(vararg category: Category) {
