@@ -1,27 +1,46 @@
 package cz.cvut.fel.pda.tickduck.adapters
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import cz.cvut.fel.pda.tickduck.R
+import cz.cvut.fel.pda.tickduck.utils.CalendarUtils
+import java.time.LocalDate
 
-class CalendarAdapter (
-    private val daysOfMonth: ArrayList<String>,
+class CalendarAdapter(
+    private val days: ArrayList<LocalDate?>,
     private val onItemListener: OnItemListener
     ) : RecyclerView.Adapter<CalendarAdapter.CalendarViewHolder>() {
+
+    companion object {
+         lateinit var c_days: ArrayList<LocalDate?>
+    }
+
+    init {
+        c_days = days
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CalendarViewHolder {
         return CalendarViewHolder.create(parent, onItemListener)
     }
 
     override fun onBindViewHolder(holder: CalendarViewHolder, position: Int) {
-        holder.dayOfMonth.text = daysOfMonth[position]
+        val date = days[position]
+        if (date != null) {
+            holder.dayOfMonth.text = date.dayOfMonth.toString()
+            if (date == CalendarUtils.selectedDay)
+                holder.dayOfMonth.setBackgroundResource(R.drawable.calendar_cell_background2)
+
+        } else {
+            holder.dayOfMonth.text = ""
+        }
     }
 
     override fun getItemCount(): Int {
-        return daysOfMonth.size
+        return days.size
     }
 
     interface OnItemListener {
@@ -34,15 +53,19 @@ class CalendarAdapter (
     ) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
 
         init { itemView.setOnClickListener(this) }
-
         var dayOfMonth: TextView = itemView.findViewById(R.id.cellDayText)
+        val parent: View = itemView.findViewById(R.id.parentView)
 
         companion object {
             fun create(parent: ViewGroup, onItemListener: OnItemListener): CalendarViewHolder {
                 val layoutView = LayoutInflater
                     .from(parent.context)
-                    .inflate(R.layout.calendar_cell, parent, false)
-                layoutView.layoutParams.height = (parent.height * 0.166666).toInt()
+                    .inflate(R.layout.calendar_cell, parent, false).apply {
+                        if (c_days.size > 15)
+                            layoutParams.height = (parent.height * 0.166666).toInt()
+                        else
+                            layoutParams.height = parent.height
+                    }
                 return CalendarViewHolder(layoutView, onItemListener)
             }
         }
