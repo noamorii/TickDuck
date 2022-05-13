@@ -36,4 +36,6 @@
     <string name="sign_up">Sign up</string>
     <string name="login">Login</string>
     <string name="profile_image">Profile image</string>
+    <string name="upload_from_gallery">Upload from gallery</string>
+    <string name="take_a_picture">Take a picture</string>
 </resources>

@@ -2,22 +2,25 @@ package cz.cvut.fel.pda.tickduck.fragments
 
 import android.Manifest
 import android.app.Activity.RESULT_OK
+import android.app.Dialog
 import android.content.ActivityNotFoundException
 import android.content.Context.MODE_PRIVATE
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import android.widget.Button
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
+import cz.cvut.fel.pda.tickduck.R
 import cz.cvut.fel.pda.tickduck.activities.LoginActivity
 import cz.cvut.fel.pda.tickduck.databinding.FragmentSettingsBinding
 import cz.cvut.fel.pda.tickduck.db.viewmodels.UserViewModel
@@ -36,10 +39,6 @@ class SettingsFragment : BaseFragment() {
 
     override fun onClickNew() {
        //do nothing
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
     }
 
     override fun onCreateView(
@@ -65,7 +64,6 @@ class SettingsFragment : BaseFragment() {
                 spEditor.remove(CURRENT_USER_ID)
                 spEditor.apply()
             }
-
             startActivity(
                 Intent(activity, LoginActivity::class.java)
             )
@@ -104,12 +102,30 @@ class SettingsFragment : BaseFragment() {
         }
 
         binding.button2.setOnClickListener {
-            if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
-                takeAPicture()
-            } else {
-                requestPermissionLauncher.launch(Manifest.permission.CAMERA)
+
+            val dialog = Dialog(requireContext())
+            showDialog(dialog)
+
+            dialog.findViewById<Button>(R.id.picture).setOnClickListener {
+                if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+                    takeAPicture()
+                    dialog.hide()
+                } else {
+                    requestPermissionLauncher.launch(Manifest.permission.CAMERA)
+                }
             }
+
         }
+    }
+
+    private fun showDialog(dialog: Dialog) {
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setContentView(R.layout.photo_popup)
+        dialog.window?.apply {
+            setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            attributes?.windowAnimations = R.style.DialogAnimation
+        }
+        dialog.show()
     }
 
     private fun saveProfilePicture(picture: Bitmap) {
