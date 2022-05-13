@@ -26,4 +26,8 @@
     <string name="Thursday">thur</string>
     <string name="Friday">fri</string>
     <string name="Saturday">sat</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="sign_up">Sign up</string>
+    <string name="login">Login</string>
 </resources>

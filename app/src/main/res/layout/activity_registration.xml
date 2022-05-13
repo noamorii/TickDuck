@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.RegistrationActivity"
+    android:background="@drawable/gradient_background"
+    >
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/registration_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingHorizontal="32dp">
+
+        <TextView
+            android:id="@+id/registration_activity_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/registration_username"
+            android:layout_marginStart="24dp"
+            android:layout_marginBottom="48dp"
+            android:text="@string/sign_up"
+            android:textSize="50sp" />
+
+        <EditText
+            android:id="@+id/registration_username"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/registration_password"
+            android:layout_marginTop="8dp"
+            android:autofillHints="name"
+            android:ems="10"
+            android:hint="@string/username"
+            android:inputType="textPersonName" />
+
+        <EditText
+            android:id="@+id/registration_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="8dp"
+            android:ems="10"
+            android:hint="@string/password"
+            android:importantForAutofill="no"
+            android:inputType="textPassword" />
+
+        <EditText
+            android:id="@+id/registration_password2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/registration_password"
+            android:layout_marginTop="8dp"
+            android:ems="10"
+            android:hint="@string/password"
+            android:importantForAutofill="no"
+            android:inputType="textPassword" />
+
+        <Button
+            android:id="@+id/registration_password_submit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/registration_password2"
+            android:layout_marginTop="16dp"
+            android:text="@string/sign_up" />
+
+    </RelativeLayout>
+</RelativeLayout>

@@ -3,6 +3,7 @@
     package="cz.cvut.fel.pda.tickduck">
 
     <uses-permission android:name="android.permission.VIBRATE" />
+
     <application
         android:name=".MainApp"
         android:allowBackup="true"
@@ -11,7 +12,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.TickDuck">
-
         <activity
             android:name=".activities.SplashActivity"
             android:exported="true">
@@ -23,15 +23,18 @@
         </activity>
 
         <activity
-            android:name=".activities.NewTodoActivity"
-            android:exported="false">
-        </activity>
+            android:name=".activities.RegistrationActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.LoginActivity"
+            android:exported="false" />
 
         <activity
+            android:name=".activities.NewTodoActivity"
+            android:exported="false"></activity>
+        <activity
             android:name=".activities.MainActivity"
-            android:exported="true">
-        </activity>
-
+            android:exported="true"></activity>
     </application>
 
 </manifest>

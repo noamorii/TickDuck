@@ -8,7 +8,7 @@
 
     <include
         android:id="@+id/toolbar"
-        layout="@layout/new_todo_toolbar"/>
+        layout="@layout/new_todo_toolbar" />
 
     <ScrollView
         android:layout_below="@id/toolbar"

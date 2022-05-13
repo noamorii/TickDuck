@@ -12,7 +12,6 @@ import cz.cvut.fel.pda.tickduck.model.Todo
 import cz.cvut.fel.pda.tickduck.model.intentDTO.NewTodoDTO
 import cz.cvut.fel.pda.tickduck.utils.SharedPreferencesKeys.CURRENT_USER_ID
 import cz.cvut.fel.pda.tickduck.utils.SharedPreferencesKeys.CURRENT_USER_PREFERENCES
-import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.launch
 import java.lang.IllegalArgumentException
 

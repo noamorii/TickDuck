@@ -1,9 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.LoginActivity">
+    tools:context=".activities.RegistrationActivity"
+    android:paddingHorizontal="32dp"
+    android:background="@drawable/gradient_background"
+    >
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <TextView
+        android:id="@+id/login_activity_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/login_username"
+        android:layout_marginStart="24dp"
+        android:layout_marginBottom="48dp"
+        android:text="@string/login"
+        android:textSize="50sp"
+        />
+
+    <EditText
+        android:id="@+id/login_username"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:hint="@string/username"
+        android:layout_above="@id/login_password"
+        android:layout_marginTop="8dp"
+        android:autofillHints="name"
+        />
+
+    <EditText
+        android:id="@+id/login_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:ems="10"
+        android:hint="@string/password"
+        android:importantForAutofill="no"
+        android:layout_centerInParent="true"
+        android:inputType="textPassword" />
+
+    <Button
+        android:id="@+id/login_password_submit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/login_password"
+        android:layout_marginTop="16dp"
+        android:text="@string/sign_up"
+        />
+
+    <TextView
+        android:id="@+id/login_link_to_sing_up"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/login_password_submit"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="24dp"
+        />
+
+</RelativeLayout>

@@ -10,4 +10,5 @@ class MainApp : Application() {
     private val database by lazy { MainDB.getDB(this) }
     val categoryDao by lazy { database.getCategoryDao() }
     val todoDao by lazy { database.getTodoDao() }
+    val userDao by lazy { database.getUserDao() }
 }
