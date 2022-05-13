@@ -4,6 +4,7 @@ import androidx.annotation.WorkerThread
 import cz.cvut.fel.pda.tickduck.db.dao.CategoryDao
 import cz.cvut.fel.pda.tickduck.model.Category
 import cz.cvut.fel.pda.tickduck.model.Todo
+import cz.cvut.fel.pda.tickduck.model.User
 import kotlinx.coroutines.flow.Flow
 
 class CategoryRepository(
@@ -27,5 +28,10 @@ class CategoryRepository(
     @WorkerThread
     fun existsByName(name: String): Boolean {
         return categoryDao.existsByName(name)
+    }
+
+    @WorkerThread
+    suspend fun getById(id: Int): Category? {
+        return categoryDao.getById(id)
     }
 }

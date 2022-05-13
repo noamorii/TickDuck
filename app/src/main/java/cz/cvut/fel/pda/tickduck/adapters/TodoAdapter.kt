@@ -31,6 +31,9 @@ class TodoAdapter(
             taskCheckbox.setOnClickListener {
                 listener.onClickItem(task.copy(isCompleted = taskCheckbox.isChecked))
             }
+            itemView.setOnClickListener {
+                listener.onClickItem(task)
+            }
         }
 
         companion object {

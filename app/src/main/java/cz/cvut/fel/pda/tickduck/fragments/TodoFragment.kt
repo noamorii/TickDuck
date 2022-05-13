@@ -20,6 +20,7 @@ import cz.cvut.fel.pda.tickduck.model.Todo
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import cz.cvut.fel.pda.tickduck.R
+import cz.cvut.fel.pda.tickduck.activities.TodoDetailActivity
 import cz.cvut.fel.pda.tickduck.databinding.RecycleViewFragmentBinding
 import cz.cvut.fel.pda.tickduck.model.intentDTO.NewTodoDTO
 import cz.cvut.fel.pda.tickduck.utils.SerializableExtras.NEW_TODO_DTO
@@ -90,7 +91,11 @@ class TodoFragment : BaseFragment(), TodoAdapter.Listener {
     }
 
     override fun onClickItem(task: Todo) {
-        todoViewModel.updateTodo(task)
+        val intent = Intent(activity, TodoDetailActivity::class.java).apply {
+            putExtra("todo_detail", task)
+        }
+        editLauncher.launch(intent)
+        //todoViewModel.updateTodo(task)
     }
 
     override fun deleteTodo(id: Int) {

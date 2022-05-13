@@ -10,6 +10,7 @@ import androidx.lifecycle.viewModelScope
 import cz.cvut.fel.pda.tickduck.MainApp
 import cz.cvut.fel.pda.tickduck.db.repository.CategoryRepository
 import cz.cvut.fel.pda.tickduck.model.Category
+import cz.cvut.fel.pda.tickduck.model.User
 import cz.cvut.fel.pda.tickduck.utils.SharedPreferencesKeys
 import cz.cvut.fel.pda.tickduck.utils.SharedPreferencesKeys.CURRENT_USER_ID
 import kotlinx.coroutines.launch
@@ -23,6 +24,10 @@ class CategoryViewModel(
     private val loggedInUserId = loggedInSharedPreferences.getInt(CURRENT_USER_ID, 0)
 
     val categoriesLiveData = categoryRepository.getAll(loggedInUserId).asLiveData()
+
+    suspend fun getById(id: Int): Category? {
+        return categoryRepository.getById(id)
+    }
 
     fun insert(categoryName: String) = viewModelScope.launch {
         val newCategory = Category(userId = loggedInUserId, name = categoryName)

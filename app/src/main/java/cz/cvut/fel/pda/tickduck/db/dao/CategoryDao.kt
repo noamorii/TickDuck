@@ -5,6 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import cz.cvut.fel.pda.tickduck.model.Category
+import cz.cvut.fel.pda.tickduck.model.User
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -21,5 +22,8 @@ interface CategoryDao {
 
     @Query ("DELETE FROM categories WHERE id IS :id")
     suspend fun delete(id: Int)
+
+    @Query("SELECT * FROM categories WHERE id = :id")
+    suspend fun getById(id: Int): Category?
 
 }
