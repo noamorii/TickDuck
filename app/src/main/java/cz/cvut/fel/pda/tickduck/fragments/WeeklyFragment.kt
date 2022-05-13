@@ -16,12 +16,10 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import cz.cvut.fel.pda.tickduck.R
 import cz.cvut.fel.pda.tickduck.activities.NewTodoActivity
 import cz.cvut.fel.pda.tickduck.adapters.CalendarAdapter
 import cz.cvut.fel.pda.tickduck.adapters.TodoAdapter
 import cz.cvut.fel.pda.tickduck.databinding.FragmentWeeklyBinding
-import cz.cvut.fel.pda.tickduck.databinding.NewCalednarFragmentBinding
 import cz.cvut.fel.pda.tickduck.db.viewmodels.TodoViewModel
 import cz.cvut.fel.pda.tickduck.model.Todo
 import cz.cvut.fel.pda.tickduck.model.intentDTO.NewTodoDTO
@@ -105,10 +103,10 @@ class WeeklyFragment : BaseFragment(), TodoAdapter.Listener, CalendarAdapter.OnI
 
     private fun setButtonsListener() {
         binding.buttonLeft.setOnClickListener {
-            previousWeekAction(view)
+            previousWeekAction()
         }
         binding.buttonRight.setOnClickListener{
-            nextWeekAction(view)
+            nextWeekAction()
         }
         binding.weeklyMode.setOnClickListener {
             FragmentManager.setFragment(CalendarFragment.newInstance(), activity as AppCompatActivity)
@@ -141,18 +139,18 @@ class WeeklyFragment : BaseFragment(), TodoAdapter.Listener, CalendarAdapter.OnI
         }
     }
 
-    private fun previousWeekAction(view: View?) {
+    private fun previousWeekAction() {
         CalendarUtils.selectedDay = CalendarUtils.selectedDay.minusWeeks(1)
         setWeekView()
     }
 
-    private fun nextWeekAction(view: View?) {
+    private fun nextWeekAction() {
         CalendarUtils.selectedDay = CalendarUtils.selectedDay.plusWeeks(1)
         setWeekView()
     }
 
     override fun onItemClick(position: Int, dayText: String?) {
-        val message = "Selected Date " + dayText.toString() + " " + CalendarUtils.monthYearFromDate(CalendarUtils.selectedDay)
+        val message = "Selected Date " + dayText.toString() + " " + monthYearFromDate(CalendarUtils.selectedDay)
         Toast.makeText(context?.applicationContext, message, Toast.LENGTH_LONG).show()
     }
 
@@ -162,5 +160,8 @@ class WeeklyFragment : BaseFragment(), TodoAdapter.Listener, CalendarAdapter.OnI
 
     override fun deleteTodo(id: Int) {
         todoViewModel.deleteTodo(id)
+    }
+
+    override fun onClickCheckbox(task: Todo) {
     }
 }

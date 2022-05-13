@@ -16,7 +16,6 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import cz.cvut.fel.pda.tickduck.R
 import cz.cvut.fel.pda.tickduck.activities.NewTodoActivity
 import cz.cvut.fel.pda.tickduck.adapters.CalendarAdapter
 import cz.cvut.fel.pda.tickduck.adapters.TodoAdapter
@@ -116,10 +115,10 @@ class CalendarFragment : BaseFragment(), TodoAdapter.Listener, CalendarAdapter.O
 
     private fun setButtonsListener() {
         binding.buttonLeft.setOnClickListener {
-            previousMonthAction(view)
+            previousMonthAction()
         }
         binding.buttonRight.setOnClickListener{
-            nextMonthAction(view)
+            nextMonthAction()
         }
         binding.weeklyMode.setOnClickListener {
             FragmentManager.setFragment(WeeklyFragment.newInstance(), activity as AppCompatActivity)
@@ -143,12 +142,12 @@ class CalendarFragment : BaseFragment(), TodoAdapter.Listener, CalendarAdapter.O
         calendarRecyclerView.adapter = calendarAdapter
     }
 
-    private fun previousMonthAction(view: View?) {
+    private fun previousMonthAction() {
         CalendarUtils.selectedDay = CalendarUtils.selectedDay.minusMonths(1)
         setMonthView()
     }
 
-    private fun nextMonthAction(view: View?) {
+    private fun nextMonthAction() {
         CalendarUtils.selectedDay = CalendarUtils.selectedDay.plusMonths(1)
         setMonthView()
     }
@@ -159,6 +158,9 @@ class CalendarFragment : BaseFragment(), TodoAdapter.Listener, CalendarAdapter.O
 
     override fun deleteTodo(id: Int) {
         todoViewModel.deleteTodo(id)
+    }
+
+    override fun onClickCheckbox(task: Todo) {
     }
 
     override fun onItemClick(position: Int, dayText: String?) {

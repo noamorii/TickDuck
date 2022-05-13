@@ -95,7 +95,10 @@ class TodoFragment : BaseFragment(), TodoAdapter.Listener {
             putExtra("todo_detail", task)
         }
         editLauncher.launch(intent)
-        //todoViewModel.updateTodo(task)
+    }
+
+    override fun onClickCheckbox(task: Todo) {
+        todoViewModel.updateTodo(task)
     }
 
     override fun deleteTodo(id: Int) {
