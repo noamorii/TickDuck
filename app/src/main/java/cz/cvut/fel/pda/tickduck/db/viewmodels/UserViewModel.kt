@@ -3,7 +3,6 @@ package cz.cvut.fel.pda.tickduck.db.viewmodels
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import cz.cvut.fel.pda.tickduck.MainApp
 import cz.cvut.fel.pda.tickduck.db.repository.CategoryRepository
@@ -17,8 +16,6 @@ class UserViewModel(
     private val userRepository: UserRepository,
     private val categoryRepository: CategoryRepository
 ) : ViewModel() {
-
-    val userLiveData = userRepository.getAll().asLiveData()
 
     suspend fun insert(user: User): User {
         userRepository.insert(user)
