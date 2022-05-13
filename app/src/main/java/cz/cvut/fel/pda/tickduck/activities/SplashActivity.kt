@@ -22,13 +22,6 @@ class SplashActivity : AppCompatActivity() {
         binding = ActivitySplashBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // todo always removes session
-        getSharedPreferences(SharedPreferencesKeys.CURRENT_USER_PREFERENCES, MODE_PRIVATE).apply {
-            val eee = edit()
-            eee.remove(CURRENT_USER_ID)
-            eee.apply()
-        }
-
         binding.welcomeText.alpha = 0f
         binding.welcomeText.animate().apply {
             duration = ANIM_DURATION

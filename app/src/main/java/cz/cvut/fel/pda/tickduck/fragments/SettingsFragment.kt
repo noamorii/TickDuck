@@ -1,22 +1,15 @@
 package cz.cvut.fel.pda.tickduck.fragments
 
-import android.app.Activity
+import android.content.Context.MODE_PRIVATE
 import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.fragment.app.activityViewModels
-import cz.cvut.fel.pda.tickduck.R
-import cz.cvut.fel.pda.tickduck.activities.NewTodoActivity
-import cz.cvut.fel.pda.tickduck.databinding.FragmentSearchBinding
+import cz.cvut.fel.pda.tickduck.activities.LoginActivity
 import cz.cvut.fel.pda.tickduck.databinding.FragmentSettingsBinding
-import cz.cvut.fel.pda.tickduck.db.viewmodels.TodoViewModel
-import cz.cvut.fel.pda.tickduck.model.intentDTO.NewTodoDTO
-import cz.cvut.fel.pda.tickduck.utils.SerializableExtras
+import cz.cvut.fel.pda.tickduck.utils.SharedPreferencesKeys.CURRENT_USER_ID
+import cz.cvut.fel.pda.tickduck.utils.SharedPreferencesKeys.CURRENT_USER_PREFERENCES
 
 class SettingsFragment : BaseFragment() {
 
@@ -38,4 +31,23 @@ class SettingsFragment : BaseFragment() {
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        setSignOutListener()
+    }
+
+    private fun setSignOutListener() {
+        binding.signOut.setOnClickListener {
+            requireActivity().getSharedPreferences(CURRENT_USER_PREFERENCES, MODE_PRIVATE).apply {
+                val spEditor = edit()
+                spEditor.remove(CURRENT_USER_ID)
+                spEditor.apply()
+            }
+
+            startActivity(
+                Intent(activity, LoginActivity::class.java)
+            )
+        }
+    }
 }
