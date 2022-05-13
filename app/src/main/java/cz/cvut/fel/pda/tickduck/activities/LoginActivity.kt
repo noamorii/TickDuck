@@ -3,6 +3,7 @@ package cz.cvut.fel.pda.tickduck.activities
 import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.Spanned
@@ -15,9 +16,9 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import cz.cvut.fel.pda.tickduck.databinding.ActivityLoginBinding
 import cz.cvut.fel.pda.tickduck.db.viewmodels.UserViewModel
-import cz.cvut.fel.pda.tickduck.utils.SharedPreferencesKeys
 import cz.cvut.fel.pda.tickduck.utils.SharedPreferencesKeys.CURRENT_USER_ID
 import cz.cvut.fel.pda.tickduck.utils.SharedPreferencesKeys.CURRENT_USER_PREFERENCES
+import cz.cvut.fel.pda.tickduck.utils.Vibrations
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
@@ -87,18 +88,19 @@ class LoginActivity : AppCompatActivity() {
                             )
                         } else {
                             this@LoginActivity.runOnUiThread {
-                                Toast.makeText(
-                                    this@LoginActivity,
-                                    "Invalid login.",
-                                    Toast.LENGTH_SHORT
-                                ).show()
+                                Toast.makeText(this@LoginActivity, "Invalid login.", Toast.LENGTH_SHORT).show()
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                                    Vibrations.vibrate(this@LoginActivity)
+                                }
                             }
                         }
                     }
                 }
             } else {
-                Toast.makeText(this@LoginActivity, "Please enter all fields.", Toast.LENGTH_SHORT)
-                    .show()
+                Toast.makeText(this@LoginActivity, "Please enter all fields.", Toast.LENGTH_SHORT).show()
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    Vibrations.vibrate(this@LoginActivity)
+                }
             }
         }
     }

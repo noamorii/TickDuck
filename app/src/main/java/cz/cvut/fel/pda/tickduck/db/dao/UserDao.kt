@@ -4,7 +4,6 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
-import cz.cvut.fel.pda.tickduck.model.Todo
 import cz.cvut.fel.pda.tickduck.model.User
 import kotlinx.coroutines.flow.Flow
 
@@ -13,6 +12,9 @@ interface UserDao {
 
     @Query("SELECT * FROM users")
     fun getAllUsersFlow(): Flow<List<User>>
+
+    @Query("SELECT * FROM users WHERE id = :userId")
+    suspend fun getByUserId(userId: Int): User
 
     @Insert
     suspend fun insert(vararg user: User)
@@ -25,5 +27,4 @@ interface UserDao {
 
     @Query("SELECT * FROM users WHERE username = :username")
     suspend fun getByUsername(username: String): User?
-
 }

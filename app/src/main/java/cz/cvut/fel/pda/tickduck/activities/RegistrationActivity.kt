@@ -2,6 +2,7 @@ package cz.cvut.fel.pda.tickduck.activities
 
 import android.content.Intent
 import android.content.SharedPreferences
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
@@ -12,6 +13,7 @@ import cz.cvut.fel.pda.tickduck.db.viewmodels.UserViewModel
 import cz.cvut.fel.pda.tickduck.model.User
 import cz.cvut.fel.pda.tickduck.utils.SharedPreferencesKeys.CURRENT_USER_ID
 import cz.cvut.fel.pda.tickduck.utils.SharedPreferencesKeys.CURRENT_USER_PREFERENCES
+import cz.cvut.fel.pda.tickduck.utils.Vibrations
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
@@ -72,6 +74,9 @@ class RegistrationActivity : AppCompatActivity() {
                         if (foundUser == null && password1.text.toString() != password2.text.toString()) {
                             this@RegistrationActivity.runOnUiThread {
                                 Toast.makeText(this@RegistrationActivity, "Passwords need to be equal.", Toast.LENGTH_SHORT).show()
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                                    Vibrations.vibrate(this@RegistrationActivity)
+                                }
                             }
                         } else if (foundUser == null) {
 
@@ -90,12 +95,18 @@ class RegistrationActivity : AppCompatActivity() {
                         } else {
                             this@RegistrationActivity.runOnUiThread {
                                 Toast.makeText(this@RegistrationActivity, "Username already exist.", Toast.LENGTH_SHORT).show()
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                                    Vibrations.vibrate(this@RegistrationActivity)
+                                }
                             }
                         }
                     }
                 }
             } else {
                 Toast.makeText(this@RegistrationActivity, "Please enter all fields.", Toast.LENGTH_SHORT).show()
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    Vibrations.vibrate(this@RegistrationActivity)
+                }
             }
         }
     }

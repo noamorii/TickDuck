@@ -1,25 +1,38 @@
 package cz.cvut.fel.pda.tickduck.fragments
 
+import android.Manifest
 import android.app.Activity.RESULT_OK
 import android.content.ActivityNotFoundException
 import android.content.Context.MODE_PRIVATE
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.activityViewModels
 import cz.cvut.fel.pda.tickduck.activities.LoginActivity
 import cz.cvut.fel.pda.tickduck.databinding.FragmentSettingsBinding
+import cz.cvut.fel.pda.tickduck.db.viewmodels.UserViewModel
+import cz.cvut.fel.pda.tickduck.utils.BitmapConverter
 import cz.cvut.fel.pda.tickduck.utils.SharedPreferencesKeys.CURRENT_USER_ID
 import cz.cvut.fel.pda.tickduck.utils.SharedPreferencesKeys.CURRENT_USER_PREFERENCES
+import cz.cvut.fel.pda.tickduck.utils.Vibrations
 
 class SettingsFragment : BaseFragment() {
 
     private lateinit var binding: FragmentSettingsBinding
+
+    private val userViewModel: UserViewModel by activityViewModels {
+        UserViewModel.UserViewModelFactory(requireContext())
+    }
 
     override fun onClickNew() {
        //do nothing
@@ -40,10 +53,9 @@ class SettingsFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        requireActivity().packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)
-
         setSignOutListener()
         takeAPictureListener()
+        loadUserProfileImage()
     }
 
     private fun setSignOutListener() {
@@ -64,19 +76,50 @@ class SettingsFragment : BaseFragment() {
         val registerActivity = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == RESULT_OK) {
-                val imageBitmap = it.data?.extras?.get("data") as Bitmap
-                binding.imageView2.setImageBitmap(imageBitmap)
+                val image = it.data?.extras?.get("data") as Bitmap
+                saveProfilePicture(image)
+                loadUserProfileImage()
             }
         }
 
-        binding.button2.setOnClickListener {
+        val takeAPicture = {
             try {
                 registerActivity.launch(
                     Intent(MediaStore.ACTION_IMAGE_CAPTURE)
                 )
             } catch (e: ActivityNotFoundException) {
-                // display error state to the user
+                Log.d("Log", "Activity not found")
             }
+        }
+
+        val requestPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
+            if (isGranted) {
+                takeAPicture()
+            } else {
+                Toast.makeText(requireActivity(), "Camera permissions are required.", Toast.LENGTH_SHORT).show()
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    Vibrations.vibrate(this@SettingsFragment.requireContext())
+                }
+            }
+        }
+
+        binding.button2.setOnClickListener {
+            if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+                takeAPicture()
+            } else {
+                requestPermissionLauncher.launch(Manifest.permission.CAMERA)
+            }
+        }
+    }
+
+    private fun saveProfilePicture(picture: Bitmap) {
+        userViewModel.loggedUser!!.profilePicture = BitmapConverter.convert(picture)
+        userViewModel.updateUser()
+    }
+
+    private fun loadUserProfileImage() {
+        userViewModel.loggedUser!!.profilePicture?.apply {
+            binding.imageView2.setImageBitmap(BitmapConverter.convert(this))
         }
     }
 }

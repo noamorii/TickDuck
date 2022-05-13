@@ -13,7 +13,6 @@ import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
 import cz.cvut.fel.pda.tickduck.R
@@ -24,6 +23,7 @@ import cz.cvut.fel.pda.tickduck.fragments.FragmentManager
 import cz.cvut.fel.pda.tickduck.fragments.SettingsFragment
 import cz.cvut.fel.pda.tickduck.fragments.TodoFragment
 import cz.cvut.fel.pda.tickduck.model.Category
+import cz.cvut.fel.pda.tickduck.utils.Vibrations
 
 
 class MainActivity : AppCompatActivity() {
@@ -119,20 +119,10 @@ class MainActivity : AppCompatActivity() {
             } else {
                 Toast.makeText(this, "Category \"$name\" already exists.", Toast.LENGTH_SHORT).show()
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                    vibrate()
+                    Vibrations.vibrate(this)
                 }
             }
         }
-    }
-
-    @RequiresApi(Build.VERSION_CODES.S)
-    private fun vibrate() {
-        val vibratorManager = getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
-        vibratorManager.defaultVibrator.vibrate(
-            VibrationEffect.createOneShot(
-                250, VibrationEffect.DEFAULT_AMPLITUDE
-            )
-        )
     }
 
     private fun loadCategories() {
