@@ -21,6 +21,7 @@ import cz.cvut.fel.pda.tickduck.databinding.LeftNavigationDrawerBinding
 import cz.cvut.fel.pda.tickduck.db.viewmodels.TodoViewModel
 import cz.cvut.fel.pda.tickduck.fragments.CalendarFragment
 import cz.cvut.fel.pda.tickduck.fragments.FragmentManager
+import cz.cvut.fel.pda.tickduck.fragments.SettingsFragment
 import cz.cvut.fel.pda.tickduck.fragments.TodoFragment
 import cz.cvut.fel.pda.tickduck.model.Category
 
@@ -48,7 +49,7 @@ class MainActivity : AppCompatActivity() {
         binding.mainInclude.bottomNavigationView.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.settings -> {
-                    Log.d("Log", "Settings")
+                    FragmentManager.setFragment(SettingsFragment(), this)
                 }
                 R.id.calendar -> {
                     FragmentManager.setFragment(CalendarFragment.newInstance(), this)

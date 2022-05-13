@@ -28,4 +28,7 @@
     <string name="month">Month</string>
     <string name="today">Today</string>
     <string name="days">Weeks</string>
+    <string name="sign_out">Sign out</string>
+    <string name="change_profile_image">Change profile image</string>
+    <string name="settings_frame">Settings</string>
 </resources>
