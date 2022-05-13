@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import cz.cvut.fel.pda.tickduck.activities.NewTodoActivity
+import cz.cvut.fel.pda.tickduck.activities.TodoDetailActivity
 import cz.cvut.fel.pda.tickduck.adapters.CalendarAdapter
 import cz.cvut.fel.pda.tickduck.adapters.TodoAdapter
 import cz.cvut.fel.pda.tickduck.databinding.NewCalednarFragmentBinding
@@ -153,7 +154,10 @@ class CalendarFragment : BaseFragment(), TodoAdapter.Listener, CalendarAdapter.O
     }
 
     override fun onClickItem(task: Todo) {
-        todoViewModel.updateTodo(task)
+        val intent = Intent(activity, TodoDetailActivity::class.java).apply {
+            putExtra("todo_detail", task)
+        }
+        editLauncher.launch(intent)
     }
 
     override fun deleteTodo(id: Int) {
