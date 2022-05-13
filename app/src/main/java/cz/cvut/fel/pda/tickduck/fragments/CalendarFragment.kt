@@ -161,6 +161,7 @@ class CalendarFragment : BaseFragment(), TodoAdapter.Listener, CalendarAdapter.O
     }
 
     override fun onClickCheckbox(task: Todo) {
+        todoViewModel.updateTodo(task)
     }
 
     override fun onItemClick(position: Int, dayText: String?) {

@@ -163,5 +163,6 @@ class WeeklyFragment : BaseFragment(), TodoAdapter.Listener, CalendarAdapter.OnI
     }
 
     override fun onClickCheckbox(task: Todo) {
+        todoViewModel.updateTodo(task)
     }
 }

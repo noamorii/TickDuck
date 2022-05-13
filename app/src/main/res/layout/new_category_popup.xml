@@ -10,6 +10,7 @@
     tools:context=".activities.MainActivity">
 
     <EditText
+        android:textColorHighlight="#00C2FF"
         android:id="@+id/newCategoryName"
         android:layout_width="256dp"
         android:layout_height="wrap_content"
