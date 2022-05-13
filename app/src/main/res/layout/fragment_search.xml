@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:context=".fragments.SearchFragment">
+
+    <EditText
+        android:id="@+id/searchTodos"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="56dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginRight="56dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/gradient_search"
+        android:hint="@string/search"
+        android:inputType="text"
+        android:paddingLeft="16dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:visibility="visible"
+        tools:ignore="RtlSymmetry" />
+</FrameLayout>

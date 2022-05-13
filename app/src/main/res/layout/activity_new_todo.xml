@@ -3,74 +3,77 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.NewTodoActivity"
-    >
+    android:background="#000000"
+    tools:context=".activities.NewTodoActivity">
 
     <include
         android:id="@+id/toolbar"
         layout="@layout/new_todo_toolbar" />
 
     <ScrollView
-        android:layout_below="@id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true"
-        >
+        android:layout_below="@id/toolbar"
+        android:fillViewport="true">
 
         <LinearLayout
             android:id="@+id/sub_content_view"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
             android:orientation="vertical"
             android:paddingHorizontal="16dp"
-            android:layout_marginTop="16dp"
             android:paddingBottom="5sp">
 
             <EditText
                 android:id="@+id/edTask"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:autofillHints=""
+                android:backgroundTint="#00C2FF"
                 android:ems="10"
                 android:hint="@string/title_hint"
                 android:inputType="text"
                 android:minHeight="48dp"
-                android:autofillHints="" />
+                android:textColorHint="#00C2FF" />
 
             <Spinner
                 android:id="@+id/edCategory"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:backgroundTint="#00C2FF"
                 android:ems="10"
-                android:minHeight="48dp"
-                />
+                android:minHeight="48dp" />
 
             <EditText
                 android:id="@+id/edDate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="@string/date_hint"
+                android:backgroundTint="#00C2FF"
                 android:clickable="false"
                 android:cursorVisible="false"
+                android:ems="10"
                 android:focusable="false"
                 android:focusableInTouchMode="false"
+                android:hint="@string/date_hint"
                 android:importantForAutofill="no"
                 android:inputType="date"
-                />
+                android:textColorHint="#00C2FF" />
 
             <EditText
                 android:id="@+id/edDescription"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:autofillHints=""
+                android:backgroundTint="#00C2FF"
                 android:baselineAligned="false"
                 android:ems="10"
                 android:gravity="top"
                 android:hint="@string/description_hint"
                 android:inputType="text|textMultiLine"
-                android:autofillHints=""
                 android:nestedScrollingEnabled="false"
                 android:overScrollMode="never"
-                />
+                android:textColorHint="#00C2FF" />
         </LinearLayout>
     </ScrollView>
 

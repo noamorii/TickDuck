@@ -20,28 +20,27 @@ import cz.cvut.fel.pda.tickduck.R
 import cz.cvut.fel.pda.tickduck.activities.NewTodoActivity
 import cz.cvut.fel.pda.tickduck.adapters.CalendarAdapter
 import cz.cvut.fel.pda.tickduck.adapters.TodoAdapter
+import cz.cvut.fel.pda.tickduck.databinding.FragmentWeeklyBinding
 import cz.cvut.fel.pda.tickduck.databinding.NewCalednarFragmentBinding
 import cz.cvut.fel.pda.tickduck.db.viewmodels.TodoViewModel
 import cz.cvut.fel.pda.tickduck.model.Todo
 import cz.cvut.fel.pda.tickduck.model.intentDTO.NewTodoDTO
 import cz.cvut.fel.pda.tickduck.utils.CalendarUtils
-import cz.cvut.fel.pda.tickduck.utils.SerializableExtras.NEW_TODO_DTO
+import cz.cvut.fel.pda.tickduck.utils.CalendarUtils.Companion.monthYearFromDate
+import cz.cvut.fel.pda.tickduck.utils.SerializableExtras
 import java.time.LocalDate
 
+class WeeklyFragment : BaseFragment(), TodoAdapter.Listener, CalendarAdapter.OnItemListener {
 
-class CalendarFragment : BaseFragment(), TodoAdapter.Listener, CalendarAdapter.OnItemListener {
-
-    private lateinit var binding: NewCalednarFragmentBinding
-    private lateinit var calendarAdapter: CalendarAdapter
-    private lateinit var todoAdapter: TodoAdapter
-    private lateinit var editLauncher: ActivityResultLauncher<Intent>
     private lateinit var monthYearText: TextView
+    private lateinit var todoAdapter: TodoAdapter
     private lateinit var calendarRecyclerView: RecyclerView
-
+    private lateinit var binding: FragmentWeeklyBinding
+    private lateinit var editLauncher: ActivityResultLauncher<Intent>
 
     companion object {
         @JvmStatic
-        fun newInstance() = CalendarFragment()
+        fun newInstance() = WeeklyFragment()
     }
 
     private val todoViewModel: TodoViewModel by activityViewModels {
@@ -54,31 +53,21 @@ class CalendarFragment : BaseFragment(), TodoAdapter.Listener, CalendarAdapter.O
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        CalendarUtils.selectedDay = LocalDate.now()
         onEditResult()
-    }
-
-    private fun onEditResult() {
-        editLauncher = registerForActivityResult(
-            ActivityResultContracts.StartActivityForResult()) {
-            if (it.resultCode == Activity.RESULT_OK) {
-                todoViewModel.insertTodo(it.data?.getSerializableExtra(NEW_TODO_DTO) as NewTodoDTO)
-            }
-        }
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = NewCalednarFragmentBinding.inflate(inflater, container, false)
+        binding = FragmentWeeklyBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initWidgets()
-        setMonthView()
+        setWeekView()
         initRCView()
         setObserver()
         setButtonsListener()
@@ -86,7 +75,7 @@ class CalendarFragment : BaseFragment(), TodoAdapter.Listener, CalendarAdapter.O
 
     private fun initRCView() = with(binding) {
         todoRecyclerView.layoutManager = LinearLayoutManager(activity)
-        todoAdapter = TodoAdapter(this@CalendarFragment)
+        todoAdapter = TodoAdapter(this@WeeklyFragment)
         ItemTouchHelper(simpleCallback).attachToRecyclerView(todoRecyclerView)
         todoRecyclerView.adapter = todoAdapter
     }
@@ -116,13 +105,13 @@ class CalendarFragment : BaseFragment(), TodoAdapter.Listener, CalendarAdapter.O
 
     private fun setButtonsListener() {
         binding.buttonLeft.setOnClickListener {
-            previousMonthAction(view)
+            previousWeekAction(view)
         }
         binding.buttonRight.setOnClickListener{
-            nextMonthAction(view)
+            nextWeekAction(view)
         }
         binding.weeklyMode.setOnClickListener {
-            FragmentManager.setFragment(WeeklyFragment.newInstance(), activity as AppCompatActivity)
+            FragmentManager.setFragment(CalendarFragment.newInstance(), activity as AppCompatActivity)
         }
         binding.todayTodos.setOnClickListener {
         }
@@ -133,24 +122,38 @@ class CalendarFragment : BaseFragment(), TodoAdapter.Listener, CalendarAdapter.O
         monthYearText = binding.monthYearTV
     }
 
-    private fun setMonthView() {
-        monthYearText.text = CalendarUtils.monthYearFromDate(CalendarUtils.selectedDay)
-        val daysInMonth: ArrayList<LocalDate?> = CalendarUtils.daysInMonthArray(CalendarUtils.selectedDay)
-        calendarAdapter = CalendarAdapter(daysInMonth, this)
+    private fun setWeekView() {
+        monthYearText.text = monthYearFromDate(CalendarUtils.selectedDay)
+        val daysInWeek: ArrayList<LocalDate?> = CalendarUtils.daysInWeekArray(CalendarUtils.selectedDay)
+        val calendarAdapter = CalendarAdapter(daysInWeek, this)
         val layoutManager: RecyclerView.LayoutManager =
             GridLayoutManager(activity, 7)
         calendarRecyclerView.layoutManager = layoutManager
         calendarRecyclerView.adapter = calendarAdapter
     }
 
-    private fun previousMonthAction(view: View?) {
-        CalendarUtils.selectedDay = CalendarUtils.selectedDay.minusMonths(1)
-        setMonthView()
+    private fun onEditResult() {
+        editLauncher = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()) {
+            if (it.resultCode == Activity.RESULT_OK) {
+                todoViewModel.insertTodo(it.data?.getSerializableExtra(SerializableExtras.NEW_TODO_DTO) as NewTodoDTO)
+            }
+        }
     }
 
-    private fun nextMonthAction(view: View?) {
-        CalendarUtils.selectedDay = CalendarUtils.selectedDay.plusMonths(1)
-        setMonthView()
+    private fun previousWeekAction(view: View?) {
+        CalendarUtils.selectedDay = CalendarUtils.selectedDay.minusWeeks(1)
+        setWeekView()
+    }
+
+    private fun nextWeekAction(view: View?) {
+        CalendarUtils.selectedDay = CalendarUtils.selectedDay.plusWeeks(1)
+        setWeekView()
+    }
+
+    override fun onItemClick(position: Int, dayText: String?) {
+        val message = "Selected Date " + dayText.toString() + " " + CalendarUtils.monthYearFromDate(CalendarUtils.selectedDay)
+        Toast.makeText(context?.applicationContext, message, Toast.LENGTH_LONG).show()
     }
 
     override fun onClickItem(task: Todo) {
@@ -159,13 +162,5 @@ class CalendarFragment : BaseFragment(), TodoAdapter.Listener, CalendarAdapter.O
 
     override fun deleteTodo(id: Int) {
         todoViewModel.deleteTodo(id)
-    }
-
-    override fun onItemClick(position: Int, dayText: String?) {
-        if (!dayText.equals("")) {
-            val message =
-                "Selected Date " + dayText.toString() + " " + CalendarUtils.monthYearFromDate(CalendarUtils.selectedDay)
-            Toast.makeText(context?.applicationContext, message, Toast.LENGTH_LONG).show()
-        }
     }
 }

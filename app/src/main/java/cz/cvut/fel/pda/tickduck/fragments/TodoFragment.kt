@@ -19,6 +19,7 @@ import cz.cvut.fel.pda.tickduck.adapters.TodoAdapter
 import cz.cvut.fel.pda.tickduck.model.Todo
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import cz.cvut.fel.pda.tickduck.R
 import cz.cvut.fel.pda.tickduck.databinding.RecycleViewFragmentBinding
 import cz.cvut.fel.pda.tickduck.model.intentDTO.NewTodoDTO
 import cz.cvut.fel.pda.tickduck.utils.SerializableExtras.NEW_TODO_DTO
@@ -34,6 +35,7 @@ class TodoFragment : BaseFragment(), TodoAdapter.Listener {
     private lateinit var binding: RecycleViewFragmentBinding
     private lateinit var editLauncher: ActivityResultLauncher<Intent>
     private lateinit var adapter: TodoAdapter
+    private lateinit var searchFragment: SearchFragment
 
     private val todoViewModel: TodoViewModel by activityViewModels {
         TodoViewModel.TodoViewModelFactory(requireContext())
@@ -46,20 +48,8 @@ class TodoFragment : BaseFragment(), TodoAdapter.Listener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         onEditResult()
-    }
-
-    private fun filter(text: String) {
-        val list: List<Todo>? = todoViewModel.allTodosLiveData.value
-        val result: MutableList<Todo> = mutableListOf()
-        if (list != null) {
-            for (todo in list) {
-                if (todo.name.lowercase(Locale.getDefault())
-                        .contains(text.lowercase(Locale.getDefault()))) {
-                    result.add(todo)
-                }
-            }
-            adapter.submitList(result)
-        }
+        searchFragment = SearchFragment()
+        childFragmentManager.beginTransaction().replace(R.id.search, searchFragment).commit()
     }
 
     private fun onEditResult() {
@@ -83,18 +73,6 @@ class TodoFragment : BaseFragment(), TodoAdapter.Listener {
         super.onViewCreated(view, savedInstanceState)
         initRCView()
         setObserver()
-        setSearch()
-    }
-
-    private fun setSearch() {
-        val editText: EditText = binding.searchText
-        editText.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-            override fun afterTextChanged(p0: Editable?) {
-                filter(p0.toString())
-            }
-        })
     }
 
     private fun setObserver() {
@@ -108,6 +86,7 @@ class TodoFragment : BaseFragment(), TodoAdapter.Listener {
         adapter = TodoAdapter(this@TodoFragment)
         ItemTouchHelper(simpleCallback).attachToRecyclerView(rcViewTodos)
         rcViewTodos.adapter = adapter
+        searchFragment.setAdapter(adapter)
     }
 
     override fun onClickItem(task: Todo) {
