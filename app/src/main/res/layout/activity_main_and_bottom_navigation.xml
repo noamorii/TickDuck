@@ -15,7 +15,8 @@
         app:layout_constraintBottom_toTopOf="@+id/main_tab_bar_layout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        />
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/main_tab_bar_layout"

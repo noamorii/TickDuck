@@ -119,7 +119,7 @@ class SettingsFragment : BaseFragment() {
 
     private fun loadUserProfileImage() {
         userViewModel.loggedUser!!.profilePicture?.apply {
-            binding.imageView2.setImageBitmap(BitmapConverter.convert(this))
+            binding.profilePicture.setImageBitmap(BitmapConverter.convert(this))
         }
     }
 }
