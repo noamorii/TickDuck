@@ -29,7 +29,7 @@ class TodoAdapter(
             taskTitle.text = task.name
             taskCheckbox.isChecked = task.isCompleted
             taskCheckbox.setOnClickListener {
-                listener.onClickItem(task.copy(isCompleted = taskCheckbox.isChecked))
+                listener.onClickCheckbox(task.copy(isCompleted = taskCheckbox.isChecked))
             }
             itemView.setOnClickListener {
                 listener.onClickItem(task)
@@ -58,5 +58,6 @@ class TodoAdapter(
     interface Listener {
         fun onClickItem(task: Todo)
         fun deleteTodo(id: Int)
+        fun onClickCheckbox(task: Todo)
     }
 }
