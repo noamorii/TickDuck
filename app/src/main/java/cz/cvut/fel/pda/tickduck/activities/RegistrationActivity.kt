@@ -75,12 +75,13 @@ class RegistrationActivity : AppCompatActivity() {
                             }
                         } else if (foundUser == null) {
 
-                            userViewModel.insert(User(
-                                username = username.text.toString(),
-                                password = password1.text.toString()
-                            ))
-                            val newUserId = userViewModel.getByUsername(username.text.toString())
-                            setToContext(newUserId!!.id!!)
+                            val newUser = userViewModel.insert(
+                                User(
+                                    username = username.text.toString(),
+                                    password = password1.text.toString()
+                                )
+                            )
+                            setToContext(newUser.id!!)
 
                             startActivity(
                                 Intent(this@RegistrationActivity, MainActivity::class.java)

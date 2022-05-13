@@ -15,8 +15,8 @@ class UserRepository(
     }
 
     @WorkerThread
-    suspend fun insert(vararg user: User) {
-        userDao.insert(*user)
+    suspend fun insert(user: User) {
+        userDao.insert(user)
     }
 
     @WorkerThread

@@ -6,19 +6,30 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import cz.cvut.fel.pda.tickduck.MainApp
+import cz.cvut.fel.pda.tickduck.db.repository.CategoryRepository
 import cz.cvut.fel.pda.tickduck.db.repository.UserRepository
+import cz.cvut.fel.pda.tickduck.model.Category
 import cz.cvut.fel.pda.tickduck.model.User
 import kotlinx.coroutines.launch
 import java.lang.IllegalArgumentException
 
 class UserViewModel(
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val categoryRepository: CategoryRepository
 ) : ViewModel() {
 
     val userLiveData = userRepository.getAll().asLiveData()
 
-    suspend fun insert(user: User) {
+    suspend fun insert(user: User): User {
         userRepository.insert(user)
+        val createdUser = userRepository.getByUsername(user.username)!!
+        categoryRepository.insert(
+            Category(
+                userId = createdUser.id!!,
+                name = "Inbox"
+            )
+        )
+        return createdUser
     }
 
     fun delete(id: Int) = viewModelScope.launch {
@@ -38,7 +49,8 @@ class UserViewModel(
 
                 @Suppress("Unchecked_cast")
                 return UserViewModel(
-                    UserRepository(mainApp.userDao)
+                    UserRepository(mainApp.userDao),
+                    CategoryRepository(mainApp.categoryDao)
                 ) as T
             }
             throw IllegalArgumentException("Unknown_ViewModelClass")
