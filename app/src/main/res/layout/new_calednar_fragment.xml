@@ -123,16 +123,15 @@
         android:id="@+id/calendarRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="220dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp" >
+        android:layout_marginHorizontal="16dp"
+        >
 
     </androidx.recyclerview.widget.RecyclerView>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp">
+        >
 
         <Button
             android:id="@+id/todayTodos"
@@ -140,7 +139,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
-            android:text="Today" />
+            android:text="@string/today" />
 
         <Button
             android:id="@+id/weeklyMode"
