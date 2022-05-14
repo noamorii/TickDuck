@@ -59,7 +59,7 @@ class SettingsFragment : BaseFragment() {
     }
 
     override fun onClickNew() {
-        editLauncher.launch(Intent(activity, NewTodoActivity::class.java))
+        // nothing
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -71,7 +71,7 @@ class SettingsFragment : BaseFragment() {
     private fun onEditResult() {
         editLauncher = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()) {
-            if (it.resultCode == Activity.RESULT_OK) {
+            if (it.resultCode == RESULT_OK) {
                 todoViewModel.insertTodo(it.data?.getSerializableExtra(SerializableExtras.NEW_TODO_DTO) as NewTodoDTO)
             }
         }

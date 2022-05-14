@@ -3,6 +3,7 @@ package cz.cvut.fel.pda.tickduck.activities
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
@@ -12,7 +13,9 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import cz.cvut.fel.pda.tickduck.R
 import cz.cvut.fel.pda.tickduck.databinding.LeftNavigationDrawerBinding
@@ -81,12 +84,15 @@ class MainActivity : AppCompatActivity(),
         binding.mainInclude.bottomNavigationView.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.settings -> {
+                    setFabColor(R.color.fab_disable)
                     FragmentManager.setFragment(SettingsFragment(), this)
                 }
                 R.id.calendar -> {
+                    setFabColor(R.color.main_color)
                     FragmentManager.setFragment(CalendarFragment.newInstance(), this)
                 }
                 R.id.todayTodos -> {
+                    setFabColor(R.color.main_color)
                     if (FragmentManager.currentFragment !is TodoFragment) {
                         FragmentManager.setFragment(TodoFragment.newInstance(), this)
                     }
@@ -97,6 +103,12 @@ class MainActivity : AppCompatActivity(),
 
         binding.mainInclude.fab.setOnClickListener {
             FragmentManager.currentFragment?.onClickNew()
+        }
+    }
+
+    private fun setFabColor(color: Int) {
+        findViewById<FloatingActionButton>(R.id.fab).apply {
+            this.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this@MainActivity, color))
         }
     }
 

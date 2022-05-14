@@ -8,6 +8,7 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="main_color">#00C2FF</color>
+    <color name="fab_disable">#424242</color>
 
     <color name="low_priority">#00C2FF</color>
     <color name="medium_priority">#E3BF07</color>

@@ -3,25 +3,21 @@ package cz.cvut.fel.pda.tickduck.fragments
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.EditText
+import android.view.*
+import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.activityViewModels
-import androidx.recyclerview.widget.LinearLayoutManager
-import cz.cvut.fel.pda.tickduck.activities.NewTodoActivity
-import cz.cvut.fel.pda.tickduck.db.viewmodels.TodoViewModel
-import cz.cvut.fel.pda.tickduck.adapters.TodoAdapter
-import cz.cvut.fel.pda.tickduck.model.Todo
 import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import cz.cvut.fel.pda.tickduck.R
+import cz.cvut.fel.pda.tickduck.activities.NewTodoActivity
 import cz.cvut.fel.pda.tickduck.activities.TodoDetailActivity
+import cz.cvut.fel.pda.tickduck.adapters.TodoAdapter
 import cz.cvut.fel.pda.tickduck.databinding.RecycleViewFragmentBinding
+import cz.cvut.fel.pda.tickduck.db.viewmodels.TodoViewModel
+import cz.cvut.fel.pda.tickduck.model.Todo
 import cz.cvut.fel.pda.tickduck.model.intentDTO.NewTodoDTO
 import cz.cvut.fel.pda.tickduck.utils.SerializableExtras.NEW_TODO_DTO
 import cz.cvut.fel.pda.tickduck.utils.SerializableExtras.TODO_DETAIL
@@ -49,6 +45,7 @@ class TodoFragment : BaseFragment(), TodoAdapter.Listener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
         onEditResult()
         searchFragment = SearchFragment()
         childFragmentManager.beginTransaction().replace(R.id.search, searchFragment).commit()
@@ -69,6 +66,18 @@ class TodoFragment : BaseFragment(), TodoAdapter.Listener {
     ): View {
         binding = RecycleViewFragmentBinding.inflate(inflater, container, false)
         return binding.root
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater) // todo not working
+        inflater.inflate(R.menu.todo_fragment_toolbar_menu, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+
+        }
+        return false
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -116,9 +125,9 @@ class TodoFragment : BaseFragment(), TodoAdapter.Listener {
         }
 
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-            val id: Int? = todoViewModel.allTodosLiveData.value?.get(viewHolder.adapterPosition)?.id
-            if (id != null) {
-                deleteTodo(id)
+            todoViewModel.allTodosLiveData.value?.get(viewHolder.adapterPosition)?.apply {
+                deleteTodo(id!!)
+                Toast.makeText(requireContext(), "Todo \"${name}\" has been deleted.", Toast.LENGTH_SHORT).show()
             }
         }
     }
