@@ -175,7 +175,12 @@ class CalendarFragment : BaseFragment(), TodoAdapter.Listener, CalendarAdapter.O
         if (date != null) {
             CalendarUtils.selectedDay = date
             setMonthView()
+
+            var fo  = todoViewModel.getTodosByDate(date)
+            println(fo.value)
         }
+
+
         val message = "Selected Date " + date.toString() + " " + CalendarUtils.monthYearFromDate(
             CalendarUtils.selectedDay
         )

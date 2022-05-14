@@ -6,10 +6,8 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.viewModels
 import cz.cvut.fel.pda.tickduck.R
-import cz.cvut.fel.pda.tickduck.databinding.ActivityNewTodoBinding
 import cz.cvut.fel.pda.tickduck.databinding.ActivityTodoDetailBinding
 import cz.cvut.fel.pda.tickduck.db.viewmodels.CategoryViewModel
-import cz.cvut.fel.pda.tickduck.db.viewmodels.UserViewModel
 import cz.cvut.fel.pda.tickduck.model.Todo
 import cz.cvut.fel.pda.tickduck.utils.SerializableExtras.TODO_DETAIL
 import kotlinx.coroutines.runBlocking
@@ -56,7 +54,9 @@ class TodoDetailActivity : AppCompatActivity() {
             runBlocking {
                 todoCategory.text = categoryViewModel.getById(todo!!.categoryId)?.name
             }
-            TodoDate.text = todo?.date
+            if (todo!!.date != "null") {
+                TodoDate.text = todo?.date
+            }
             TodoDescription.text = todo?.description
             TodoName.text = todo?.name
         }

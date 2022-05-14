@@ -69,7 +69,6 @@ class NewTodoActivity : AppCompatActivity() {
 
         if (item.itemId == android.R.id.home) {
             finish()
-            //back
         }
         return super.onOptionsItemSelected(item)
     }

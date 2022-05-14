@@ -13,7 +13,6 @@ import android.widget.*
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.fragment.app.activityViewModels
 import cz.cvut.fel.pda.tickduck.R
 import cz.cvut.fel.pda.tickduck.databinding.LeftNavigationDrawerBinding
 import cz.cvut.fel.pda.tickduck.db.viewmodels.TodoViewModel
