@@ -125,6 +125,8 @@ class CalendarFragment : BaseFragment(), TodoAdapter.Listener, CalendarAdapter.O
             FragmentManager.setFragment(WeeklyFragment.newInstance(), activity as AppCompatActivity)
         }
         binding.todayTodos.setOnClickListener {
+            CalendarUtils.selectedDay = LocalDate.now()
+            setMonthView()
         }
     }
 
@@ -168,11 +170,14 @@ class CalendarFragment : BaseFragment(), TodoAdapter.Listener, CalendarAdapter.O
         todoViewModel.updateTodo(task)
     }
 
-    override fun onItemClick(position: Int, dayText: String?) {
-        if (!dayText.equals("")) {
-            val message =
-                "Selected Date " + dayText.toString() + " " + CalendarUtils.monthYearFromDate(CalendarUtils.selectedDay)
-            Toast.makeText(context?.applicationContext, message, Toast.LENGTH_LONG).show()
+    override fun onItemClick(position: Int, date: LocalDate?) {
+        if (date != null) {
+            CalendarUtils.selectedDay = date
+            setMonthView()
         }
+        val message = "Selected Date " + date.toString() + " " + CalendarUtils.monthYearFromDate(
+            CalendarUtils.selectedDay
+        )
+        Toast.makeText(context?.applicationContext, message, Toast.LENGTH_LONG).show()
     }
 }

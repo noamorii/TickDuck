@@ -45,6 +45,10 @@ class MainActivity : AppCompatActivity() {
         setNavigationViewMenuListener()
     }
 
+    override fun onBackPressed() {
+        //do nothing
+    }
+
     private fun setNavigationListener() {
         binding.mainInclude.bottomNavigationView.setOnItemSelectedListener {
             when (it.itemId) {
