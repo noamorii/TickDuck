@@ -1,6 +1,7 @@
 package cz.cvut.fel.pda.tickduck.fragments
 
 import android.Manifest
+import android.app.Activity
 import android.app.Activity.RESULT_OK
 import android.app.Dialog
 import android.content.ActivityNotFoundException
@@ -26,17 +27,24 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import cz.cvut.fel.pda.tickduck.R
 import cz.cvut.fel.pda.tickduck.activities.LoginActivity
+import cz.cvut.fel.pda.tickduck.activities.NewTodoActivity
 import cz.cvut.fel.pda.tickduck.databinding.FragmentSettingsBinding
+import cz.cvut.fel.pda.tickduck.db.viewmodels.TodoViewModel
 import cz.cvut.fel.pda.tickduck.db.viewmodels.UserViewModel
+import cz.cvut.fel.pda.tickduck.model.intentDTO.NewTodoDTO
 import cz.cvut.fel.pda.tickduck.utils.BitmapConverter
+import cz.cvut.fel.pda.tickduck.utils.CalendarUtils
+import cz.cvut.fel.pda.tickduck.utils.SerializableExtras
 import cz.cvut.fel.pda.tickduck.utils.SharedPreferencesKeys.CURRENT_USER_ID
 import cz.cvut.fel.pda.tickduck.utils.SharedPreferencesKeys.CURRENT_USER_PREFERENCES
 import cz.cvut.fel.pda.tickduck.utils.Vibrations
 import kotlinx.coroutines.*
+import java.time.LocalDate
 
 class SettingsFragment : BaseFragment() {
 
     private lateinit var binding: FragmentSettingsBinding
+    private lateinit var editLauncher: ActivityResultLauncher<Intent>
     private lateinit var registerActivityTakeAnImage: ActivityResultLauncher<Intent>
     private lateinit var registerPermissionsActivityTakeAnImage: ActivityResultLauncher<String>
     private lateinit var registerActivityBrowseAnImage: ActivityResultLauncher<Intent>
@@ -46,8 +54,27 @@ class SettingsFragment : BaseFragment() {
         UserViewModel.UserViewModelFactory(requireContext())
     }
 
+    private val todoViewModel: TodoViewModel by activityViewModels {
+        TodoViewModel.TodoViewModelFactory(requireContext())
+    }
+
     override fun onClickNew() {
-       //do nothing
+        editLauncher.launch(Intent(activity, NewTodoActivity::class.java))
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        CalendarUtils.selectedDay = LocalDate.now()
+        onEditResult()
+    }
+
+    private fun onEditResult() {
+        editLauncher = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()) {
+            if (it.resultCode == Activity.RESULT_OK) {
+                todoViewModel.insertTodo(it.data?.getSerializableExtra(SerializableExtras.NEW_TODO_DTO) as NewTodoDTO)
+            }
+        }
     }
 
     override fun onCreateView(

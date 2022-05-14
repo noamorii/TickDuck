@@ -12,6 +12,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -92,9 +93,16 @@ class CalendarFragment : BaseFragment(), TodoAdapter.Listener, CalendarAdapter.O
         todoRecyclerView.adapter = todoAdapter
     }
 
+    private fun searchByDate(date: LocalDate): ArrayList<Todo> {
+        val listByDate : ArrayList<Todo> = ArrayList()
+        for (v in todoViewModel.allTodosLiveData.value!!)
+            if (v.date == date.minusMonths(0).toString()) listByDate.add(v)
+        return listByDate
+    }
+
     private fun setObserver() {
         todoViewModel.allTodosLiveData.observe(viewLifecycleOwner) {
-            todoAdapter.submitList(it)
+            todoAdapter.submitList(searchByDate(CalendarUtils.selectedDay))
         }
     }
 
@@ -148,11 +156,13 @@ class CalendarFragment : BaseFragment(), TodoAdapter.Listener, CalendarAdapter.O
 
     private fun previousMonthAction() {
         CalendarUtils.selectedDay = CalendarUtils.selectedDay.minusMonths(1)
+        todoAdapter.submitList(searchByDate(CalendarUtils.selectedDay))
         setMonthView()
     }
 
     private fun nextMonthAction() {
         CalendarUtils.selectedDay = CalendarUtils.selectedDay.plusMonths(1)
+        todoAdapter.submitList(searchByDate(CalendarUtils.selectedDay))
         setMonthView()
     }
 
@@ -173,17 +183,13 @@ class CalendarFragment : BaseFragment(), TodoAdapter.Listener, CalendarAdapter.O
 
     override fun onItemClick(position: Int, date: LocalDate?) {
         if (date != null) {
+
             CalendarUtils.selectedDay = date
             setMonthView()
 
-            var fo  = todoViewModel.getTodosByDate(date)
-            println(fo.value)
+            todoAdapter.submitList(searchByDate(date))
+
+            //var fo  = todoViewModel.getTodosByDate(date.minusMonths(1))
         }
-
-
-        val message = "Selected Date " + date.toString() + " " + CalendarUtils.monthYearFromDate(
-            CalendarUtils.selectedDay
-        )
-        Toast.makeText(context?.applicationContext, message, Toast.LENGTH_LONG).show()
     }
 }

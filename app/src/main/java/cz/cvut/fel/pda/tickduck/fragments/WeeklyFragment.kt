@@ -53,6 +53,7 @@ class WeeklyFragment : BaseFragment(), TodoAdapter.Listener, CalendarAdapter.OnI
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        CalendarUtils.selectedDay = LocalDate.now()
         onEditResult()
     }
 
@@ -82,8 +83,15 @@ class WeeklyFragment : BaseFragment(), TodoAdapter.Listener, CalendarAdapter.OnI
 
     private fun setObserver() {
         todoViewModel.allTodosLiveData.observe(viewLifecycleOwner) {
-            todoAdapter.submitList(it)
+            todoAdapter.submitList(searchByDate(CalendarUtils.selectedDay))
         }
+    }
+
+    private fun searchByDate(date: LocalDate): ArrayList<Todo> {
+        val listByDate : ArrayList<Todo> = ArrayList()
+        for (v in todoViewModel.allTodosLiveData.value!!)
+            if (v.date == date.minusMonths(0).toString()) listByDate.add(v)
+        return listByDate
     }
 
     private val simpleCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
@@ -145,11 +153,13 @@ class WeeklyFragment : BaseFragment(), TodoAdapter.Listener, CalendarAdapter.OnI
 
     private fun previousWeekAction() {
         CalendarUtils.selectedDay = CalendarUtils.selectedDay.minusWeeks(1)
+        todoAdapter.submitList(searchByDate(CalendarUtils.selectedDay))
         setWeekView()
     }
 
     private fun nextWeekAction() {
         CalendarUtils.selectedDay = CalendarUtils.selectedDay.plusWeeks(1)
+        todoAdapter.submitList(searchByDate(CalendarUtils.selectedDay))
         setWeekView()
     }
 
@@ -157,9 +167,8 @@ class WeeklyFragment : BaseFragment(), TodoAdapter.Listener, CalendarAdapter.OnI
         if (date != null) {
             CalendarUtils.selectedDay = date
             setWeekView()
+            todoAdapter.submitList(searchByDate(date))
         }
-        val message = "Selected Date " + date.toString() + " " + monthYearFromDate(CalendarUtils.selectedDay)
-        Toast.makeText(context?.applicationContext, message, Toast.LENGTH_LONG).show()
     }
 
     override fun onClickItem(task: Todo) {
