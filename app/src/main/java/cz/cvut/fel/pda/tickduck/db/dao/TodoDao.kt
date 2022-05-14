@@ -10,10 +10,10 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface TodoDao {
 
-    @Query("SELECT * FROM Todos WHERE userId = :userId")
+    @Query("SELECT * FROM Todos WHERE userId = :userId ORDER BY is_completed")
     fun getAllTodosFlow(userId: Int): Flow<List<Todo>>
 
-    @Query("SELECT * FROM Todos WHERE userId = :userId AND date = :date")
+    @Query("SELECT * FROM Todos WHERE userId = :userId AND date = :date ORDER BY is_completed")
     fun getAllTodosByDateFlow(userId: Int, date: String): Flow<List<Todo>>
 
     @Insert

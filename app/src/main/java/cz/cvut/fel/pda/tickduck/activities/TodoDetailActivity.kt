@@ -13,9 +13,7 @@ import cz.cvut.fel.pda.tickduck.R
 import cz.cvut.fel.pda.tickduck.databinding.ActivityTodoDetailBinding
 import cz.cvut.fel.pda.tickduck.db.viewmodels.CategoryViewModel
 import cz.cvut.fel.pda.tickduck.model.Todo
-import cz.cvut.fel.pda.tickduck.model.intentDTO.NewTodoDTO
 import cz.cvut.fel.pda.tickduck.utils.FormatPatterns.DATE_PATTERN
-import cz.cvut.fel.pda.tickduck.utils.SerializableExtras
 import cz.cvut.fel.pda.tickduck.utils.SerializableExtras.TODO_DETAIL
 import kotlinx.coroutines.runBlocking
 import java.time.LocalDate

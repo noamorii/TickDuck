@@ -1,12 +1,16 @@
 package cz.cvut.fel.pda.tickduck.activities
 
 import android.app.DatePickerDialog
+import android.app.Dialog
 import android.content.Intent
 import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.Window
 import android.widget.ArrayAdapter
+import android.widget.Button
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -157,11 +161,31 @@ class NewTodoActivity : AppCompatActivity() {
     }
 
     private fun setButtonPriorityListener() {
-
         binding.priorityButton.setOnClickListener {
-                
+            Dialog(this).apply {
+                requestWindowFeature(Window.FEATURE_NO_TITLE)
+                setContentView(R.layout.priority_popup)
+                window?.apply {
+                    setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                    attributes?.windowAnimations = R.style.DialogAnimation
+                }
+
+                setPriorityOfPopupPriorityDialog(this, R.id.low_priority, PriorityEnum.LOW)
+                setPriorityOfPopupPriorityDialog(this, R.id.medium_priority, PriorityEnum.MEDIUM)
+                setPriorityOfPopupPriorityDialog(this, R.id.high_priority, PriorityEnum.HIGH)
+
+                show()
             }
         }
+    }
+
+    private fun setPriorityOfPopupPriorityDialog(dialog: Dialog, id: Int, priority: PriorityEnum) {
+        dialog.findViewById<Button>(id).setOnClickListener {
+            this.priority = priority
+            setPriority()
+            dialog.hide()
+        }
+    }
     
     private fun setPriority() {
         binding.priorityButton.apply {

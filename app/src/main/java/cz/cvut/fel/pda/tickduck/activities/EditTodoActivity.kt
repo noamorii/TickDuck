@@ -1,14 +1,17 @@
 package cz.cvut.fel.pda.tickduck.activities
 
 import android.app.DatePickerDialog
+import android.app.Dialog
 import android.content.Intent
 import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.Window
 import android.widget.ArrayAdapter
+import android.widget.Button
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
@@ -17,7 +20,6 @@ import cz.cvut.fel.pda.tickduck.databinding.ActivityNewTodoBinding
 import cz.cvut.fel.pda.tickduck.db.viewmodels.TodoViewModel
 import cz.cvut.fel.pda.tickduck.model.Todo
 import cz.cvut.fel.pda.tickduck.model.enums.PriorityEnum
-import cz.cvut.fel.pda.tickduck.model.intentDTO.NewTodoDTO
 import cz.cvut.fel.pda.tickduck.utils.FormatPatterns
 import cz.cvut.fel.pda.tickduck.utils.SerializableExtras
 import cz.cvut.fel.pda.tickduck.utils.Vibrations
@@ -191,14 +193,35 @@ class EditTodoActivity : AppCompatActivity() {
 
     private fun setButtonPriorityListener() {
         binding.priorityButton.setOnClickListener {
-            // todo
+            Dialog(this).apply {
+                requestWindowFeature(Window.FEATURE_NO_TITLE)
+                setContentView(R.layout.priority_popup)
+                window?.apply {
+                    setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                    attributes?.windowAnimations = R.style.DialogAnimation
+                }
+
+                setPriorityOfPopupPriorityDialog(this, R.id.low_priority, PriorityEnum.LOW)
+                setPriorityOfPopupPriorityDialog(this, R.id.medium_priority, PriorityEnum.MEDIUM)
+                setPriorityOfPopupPriorityDialog(this, R.id.high_priority, PriorityEnum.HIGH)
+
+                show()
+            }
+        }
+    }
+
+    private fun setPriorityOfPopupPriorityDialog(dialog: Dialog, id: Int, priority: PriorityEnum) {
+        dialog.findViewById<Button>(id).setOnClickListener {
+            this.priority = priority
+            setPriority()
+            dialog.hide()
         }
     }
 
     private fun setPriority() {
         binding.priorityButton.apply {
-            text = todo!!.priorityEnum.text
-            setTextColor(todo!!.priorityEnum.toArgb(this@EditTodoActivity))
+            text = priority!!.text
+            setTextColor(priority!!.toArgb(this@EditTodoActivity))
         }
     }
 }

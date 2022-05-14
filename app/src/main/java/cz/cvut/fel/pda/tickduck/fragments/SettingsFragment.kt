@@ -178,9 +178,9 @@ class SettingsFragment : BaseFragment() {
 
     private fun takeAnImageListener(dialog: Dialog) {
         dialog.findViewById<Button>(R.id.take_image).setOnClickListener {
+            dialog.hide()
             if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
                 takeAnImage()
-                dialog.hide()
             } else {
                 registerPermissionsActivityTakeAnImage.launch(Manifest.permission.CAMERA)
             }
@@ -199,10 +199,10 @@ class SettingsFragment : BaseFragment() {
 
     private fun browseAnImageListener(dialog: Dialog) {
         dialog.findViewById<Button>(R.id.browse_image).setOnClickListener {
+            dialog.hide()
             if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
             ) {
                 browseAnImage()
-                dialog.hide()
             } else {
                 registerPermissionsActivityBrowseAnImage.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
             }

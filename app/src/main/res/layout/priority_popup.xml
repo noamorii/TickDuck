@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="350dp"
+    android:paddingVertical="10dp"
+    android:layout_height="wrap_content"
+    android:background="@drawable/gradient_search"
+    android:orientation="vertical"
+    tools:context=".activities.MainActivity">
+
+    <Button
+        android:id="@+id/low_priority"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/low_priority"
+        android:textColor="@color/low_priority"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
+    <Button
+        android:id="@+id/medium_priority"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/medium_priority"
+        android:textColor="@color/medium_priority"
+        app:layout_constraintTop_toBottomOf="@id/low_priority"
+        />
+
+    <Button
+        android:id="@+id/high_priority"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/high_priority"
+        android:textColor="@color/high_priority"
+        app:layout_constraintTop_toBottomOf="@+id/medium_priority" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
