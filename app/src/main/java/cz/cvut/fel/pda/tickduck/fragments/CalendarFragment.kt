@@ -26,6 +26,7 @@ import cz.cvut.fel.pda.tickduck.model.Todo
 import cz.cvut.fel.pda.tickduck.model.intentDTO.NewTodoDTO
 import cz.cvut.fel.pda.tickduck.utils.CalendarUtils
 import cz.cvut.fel.pda.tickduck.utils.SerializableExtras.NEW_TODO_DTO
+import cz.cvut.fel.pda.tickduck.utils.SerializableExtras.TODO_DETAIL
 import java.time.LocalDate
 
 
@@ -157,7 +158,7 @@ class CalendarFragment : BaseFragment(), TodoAdapter.Listener, CalendarAdapter.O
 
     override fun onClickItem(task: Todo) {
         val intent = Intent(activity, TodoDetailActivity::class.java).apply {
-            putExtra("todo_detail", task)
+            putExtra(TODO_DETAIL, task)
         }
         editLauncher.launch(intent)
     }

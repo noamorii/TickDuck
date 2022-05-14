@@ -24,6 +24,7 @@ import cz.cvut.fel.pda.tickduck.activities.TodoDetailActivity
 import cz.cvut.fel.pda.tickduck.databinding.RecycleViewFragmentBinding
 import cz.cvut.fel.pda.tickduck.model.intentDTO.NewTodoDTO
 import cz.cvut.fel.pda.tickduck.utils.SerializableExtras.NEW_TODO_DTO
+import cz.cvut.fel.pda.tickduck.utils.SerializableExtras.TODO_DETAIL
 import java.util.*
 
 class TodoFragment : BaseFragment(), TodoAdapter.Listener {
@@ -92,7 +93,7 @@ class TodoFragment : BaseFragment(), TodoAdapter.Listener {
 
     override fun onClickItem(task: Todo) {
         val intent = Intent(activity, TodoDetailActivity::class.java).apply {
-            putExtra("todo_detail", task)
+            putExtra(TODO_DETAIL, task)
         }
         editLauncher.launch(intent)
     }

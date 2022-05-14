@@ -15,6 +15,10 @@ class TodoRepository(
         return todoDao.getAllTodosFlow(userId)
     }
 
+    fun getAllByDate(userId: Int, date: String): Flow<List<Todo>> {
+        return todoDao.getAllTodosByDateFlow(userId, date)
+    }
+
     @WorkerThread
     suspend fun insert(vararg todo: Todo) {
         todoDao.insert(*todo)
@@ -28,5 +32,10 @@ class TodoRepository(
     @WorkerThread
     suspend fun delete(id: Int) {
         todoDao.delete(id)
+    }
+
+    @WorkerThread
+    suspend fun deleteByCategoryId(id: Int) {
+        todoDao.deleteByCategoryId(id)
     }
 }

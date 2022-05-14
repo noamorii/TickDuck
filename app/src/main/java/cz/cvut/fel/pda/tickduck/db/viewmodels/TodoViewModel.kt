@@ -17,6 +17,7 @@ import cz.cvut.fel.pda.tickduck.utils.SharedPreferencesKeys.CURRENT_USER_PREFERE
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.lang.IllegalArgumentException
+import java.time.LocalDate
 
 class TodoViewModel(
     private val todoRepository: TodoRepository,
@@ -40,15 +41,18 @@ class TodoViewModel(
         }
     }
 
+    fun getTodosByDate(date: LocalDate): LiveData<List<Todo>> {
+        return todoRepository.getAllByDate(loggedInUserId, date.toString()).asLiveData()
+    }
+
     fun insertTodo(newTodoDTO: NewTodoDTO) = viewModelScope.launch {
         val newTodo = Todo(
             name = newTodoDTO.name,
             description = newTodoDTO.description,
             date = newTodoDTO.date,
-            time = newTodoDTO.time,
             userId = loggedInUserId,
             flagInfo = newTodoDTO.flagInfo,
-            idCategory = newTodoDTO.idCategory
+            categoryId = newTodoDTO.idCategory
         )
         todoRepository.insert(newTodo)
     }
@@ -64,6 +68,11 @@ class TodoViewModel(
     fun insertCategory(categoryName: String) = viewModelScope.launch {
         val newCategory = Category(userId = loggedInUserId, name = categoryName)
         categoryRepository.insert(newCategory)
+    }
+
+    fun deleteCategory(categoryId: Int) = viewModelScope.launch {
+        categoryRepository.delete(categoryId)
+        todoRepository.deleteByCategoryId(categoryId)
     }
 
     fun categoryExists(name: String): Boolean {

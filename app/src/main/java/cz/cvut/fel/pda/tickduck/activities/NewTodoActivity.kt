@@ -26,8 +26,7 @@ import java.util.*
 class NewTodoActivity : AppCompatActivity() {
 
     companion object {
-        private const val DATE_PATTERN = "dd.MM."
-        private const val DATE_TIME_PATTERN = "$DATE_PATTERN, HH:mm aa"
+        private const val DATE_PATTERN = "dd.MM.yyyy"
     }
 
     private val categoryViewModel: CategoryViewModel by viewModels {
@@ -36,7 +35,6 @@ class NewTodoActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityNewTodoBinding
 
-    private var localTime: LocalTime? = null
     private var localDate: LocalDate? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -75,8 +73,7 @@ class NewTodoActivity : AppCompatActivity() {
                 name = binding.edTask.text.toString(),
                 description = binding.edDescription.text.toString(),
                 flagInfo = FlagType.BLUE,
-                time = localTime?.toString(),
-                date = localDate?.toString(),
+                date = localDate.toString(),
                 idCategory = (binding.edCategory.selectedItem as CategoryWrapper).category.id!!
                 )
             )
@@ -105,22 +102,6 @@ class NewTodoActivity : AppCompatActivity() {
         val edDateField = binding.edDate
         val calendar = Calendar.getInstance()
 
-        val setLocalDate = {
-            localDate = LocalDate.of(
-                calendar[Calendar.YEAR],
-                calendar[Calendar.MONTH],
-                calendar[Calendar.DAY_OF_MONTH]
-            )
-        }
-
-        val setLocalDateAndTime = {
-            setLocalDate()
-            localTime = LocalTime.of(
-                calendar[Calendar.HOUR],
-                calendar[Calendar.MINUTE]
-            )
-        }
-
         val updateLabel = { pattern: String ->
             edDateField.setText(
                 SimpleDateFormat(pattern, Locale.ENGLISH)
@@ -131,14 +112,11 @@ class NewTodoActivity : AppCompatActivity() {
         val dateSetListener = DatePickerDialog.OnDateSetListener { _, year, month, day ->
             calendar.set(year, month, day)
             updateLabel(DATE_PATTERN)
-            setLocalDate()
-        }
-
-        val timeSetListener = TimePickerDialog.OnTimeSetListener { _, hour, minute ->
-            calendar[Calendar.HOUR_OF_DAY] = hour
-            calendar[Calendar.MINUTE] = minute
-            updateLabel(DATE_TIME_PATTERN)
-            setLocalDateAndTime()
+            localDate = LocalDate.of(
+                calendar[Calendar.YEAR],
+                calendar[Calendar.MONTH],
+                calendar[Calendar.DAY_OF_MONTH]
+            )
         }
 
         edDateField.setOnClickListener {
@@ -147,17 +125,7 @@ class NewTodoActivity : AppCompatActivity() {
                 calendar[Calendar.YEAR],
                 calendar[Calendar.MONTH],
                 calendar[Calendar.DAY_OF_MONTH]
-            ).apply {
-                setButton(DialogInterface.BUTTON_NEUTRAL, "Time") { _, _ ->
-                    TimePickerDialog(this@NewTodoActivity,
-                        timeSetListener,
-                        calendar[Calendar.HOUR],
-                        calendar[Calendar.MINUTE],
-                        false
-                    ).show()
-                }
-                show()
-            }
+            ).show()
         }
     }
 

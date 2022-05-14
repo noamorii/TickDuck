@@ -11,6 +11,7 @@ import cz.cvut.fel.pda.tickduck.databinding.ActivityTodoDetailBinding
 import cz.cvut.fel.pda.tickduck.db.viewmodels.CategoryViewModel
 import cz.cvut.fel.pda.tickduck.db.viewmodels.UserViewModel
 import cz.cvut.fel.pda.tickduck.model.Todo
+import cz.cvut.fel.pda.tickduck.utils.SerializableExtras.TODO_DETAIL
 import kotlinx.coroutines.runBlocking
 
 class TodoDetailActivity : AppCompatActivity() {
@@ -27,7 +28,7 @@ class TodoDetailActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setSupportActionBar(binding.toolbar.root)
-        supportActionBar?.title = "Todo"
+        supportActionBar?.title = "Detail"
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         initializeTodo()
         fillData()
@@ -47,13 +48,13 @@ class TodoDetailActivity : AppCompatActivity() {
     }
 
     private fun initializeTodo() {
-        todo = intent.getSerializableExtra("todo_detail") as Todo
+        todo = intent.getSerializableExtra(TODO_DETAIL) as Todo
     }
 
     private fun fillData() = with(binding) {
         if (todo != null) {
             runBlocking {
-                todoCategory.text = categoryViewModel.getById(todo!!.idCategory)?.name
+                todoCategory.text = categoryViewModel.getById(todo!!.categoryId)?.name
             }
             TodoDate.text = todo?.date
             TodoDescription.text = todo?.description

@@ -13,6 +13,9 @@ interface TodoDao {
     @Query("SELECT * FROM Todos WHERE userId = :userId")
     fun getAllTodosFlow(userId: Int): Flow<List<Todo>>
 
+    @Query("SELECT * FROM Todos WHERE userId = :userId AND date = :date")
+    fun getAllTodosByDateFlow(userId: Int, date: String): Flow<List<Todo>>
+
     @Insert
     suspend fun insert(vararg todo: Todo)
 
@@ -22,4 +25,6 @@ interface TodoDao {
     @Query("DELETE FROM todos WHERE id IS :id")
     suspend fun delete(id: Int)
 
+    @Query("DELETE FROM todos WHERE categoryId IS :categoryId")
+    suspend fun deleteByCategoryId(categoryId: Int)
 }

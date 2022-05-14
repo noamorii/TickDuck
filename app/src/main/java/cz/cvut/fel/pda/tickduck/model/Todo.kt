@@ -18,14 +18,13 @@ data class Todo(
     val description: String,
 
     val date: String?,
-    val time: String?,
 
     val userId: Int,
 
     @ColumnInfo(name = "flag_type")
     val flagInfo: FlagType,
 
-    val idCategory: Int,
+    val categoryId: Int,
 
     @ColumnInfo(name = "is_completed")
     var isCompleted: Boolean = false
