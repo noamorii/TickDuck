@@ -195,7 +195,7 @@ class SettingsFragment : BaseFragment() {
     }
 
     private suspend fun saveAndLoadProfilePicture(picture: Bitmap) {
-        withContext(Dispatchers.IO) {
+        withContext(Dispatchers.Main) {
             userViewModel.loggedUser!!.profilePicture = BitmapConverter.convert(picture)
             userViewModel.updateUser()
             loadUserProfileImage()
