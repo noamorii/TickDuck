@@ -61,14 +61,10 @@ class NewTodoActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.id_create) {
-            if (validate()) {
-                setResult()
-                finish()
-            }
-        }
-
-        if (item.itemId == android.R.id.home) {
+        if (item.itemId == R.id.id_create && validate()) {
+            setResult()
+            finish()
+        } else if (item.itemId == android.R.id.home) {
             finish()
         }
         return super.onOptionsItemSelected(item)
