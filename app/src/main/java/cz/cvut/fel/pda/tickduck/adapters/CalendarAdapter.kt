@@ -1,6 +1,5 @@
 package cz.cvut.fel.pda.tickduck.adapters
 
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,7 +23,7 @@ class CalendarAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CalendarViewHolder {
-        return CalendarViewHolder.create(parent, onItemListener)
+        return CalendarViewHolder.create(parent, days, onItemListener)
     }
 
     override fun onBindViewHolder(holder: CalendarViewHolder, position: Int) {
@@ -44,20 +43,21 @@ class CalendarAdapter(
     }
 
     interface OnItemListener {
-        fun onItemClick(position: Int, dayText: String?)
+        fun onItemClick(position: Int, date: LocalDate?)
     }
 
     class CalendarViewHolder(
         itemView: View,
-        private var onItemListener: OnItemListener
+        private var onItemListener: OnItemListener,
+        private val days: ArrayList<LocalDate?>
     ) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
 
         init { itemView.setOnClickListener(this) }
-        var dayOfMonth: TextView = itemView.findViewById(R.id.cellDayText)
+        val dayOfMonth: TextView = itemView.findViewById(R.id.cellDayText)
         val parent: View = itemView.findViewById(R.id.parentView)
 
         companion object {
-            fun create(parent: ViewGroup, onItemListener: OnItemListener): CalendarViewHolder {
+            fun create(parent: ViewGroup, days: ArrayList<LocalDate?>, onItemListener: OnItemListener): CalendarViewHolder {
                 val layoutView = LayoutInflater
                     .from(parent.context)
                     .inflate(R.layout.calendar_cell, parent, false).apply {
@@ -66,12 +66,12 @@ class CalendarAdapter(
                         else
                             layoutParams.height = parent.height
                     }
-                return CalendarViewHolder(layoutView, onItemListener)
+                return CalendarViewHolder(layoutView, onItemListener, days)
             }
         }
 
         override fun onClick(view: View?) {
-            onItemListener.onItemClick(adapterPosition, dayOfMonth.text as String)
+            onItemListener.onItemClick(adapterPosition, days[adapterPosition])
         }
     }
 }

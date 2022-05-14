@@ -113,6 +113,8 @@ class WeeklyFragment : BaseFragment(), TodoAdapter.Listener, CalendarAdapter.OnI
             FragmentManager.setFragment(CalendarFragment.newInstance(), activity as AppCompatActivity)
         }
         binding.todayTodos.setOnClickListener {
+            CalendarUtils.selectedDay = LocalDate.now()
+            setWeekView()
         }
     }
 
@@ -150,8 +152,12 @@ class WeeklyFragment : BaseFragment(), TodoAdapter.Listener, CalendarAdapter.OnI
         setWeekView()
     }
 
-    override fun onItemClick(position: Int, dayText: String?) {
-        val message = "Selected Date " + dayText.toString() + " " + monthYearFromDate(CalendarUtils.selectedDay)
+    override fun onItemClick(position: Int, date: LocalDate?) {
+        if (date != null) {
+            CalendarUtils.selectedDay = date
+            setWeekView()
+        }
+        val message = "Selected Date " + date.toString() + " " + monthYearFromDate(CalendarUtils.selectedDay)
         Toast.makeText(context?.applicationContext, message, Toast.LENGTH_LONG).show()
     }
 
