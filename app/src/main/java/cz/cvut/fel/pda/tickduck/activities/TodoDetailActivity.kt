@@ -57,18 +57,17 @@ class TodoDetailActivity : AppCompatActivity() {
     }
 
     private fun fillData() = with(binding) {
-        if (todo != null) {
+        todo?.apply {
+
             runBlocking {
-                todoCategory.text = categoryViewModel.getById(todo!!.categoryId)?.name
+                todoCategory.text = categoryViewModel.getById(categoryId)?.name
             }
 
-            todo?.apply {
-                date?.apply {
-                    TodoDate.text = LocalDate.parse(this).format(dateTimeDateFormatter)
-                }
-                TodoDescription.text = description
-                TodoName.text = name
+            date?.apply {
+                TodoDate.text = LocalDate.parse(this).format(dateTimeDateFormatter)
             }
+            TodoDescription.text = description
+            TodoName.text = name
         }
     }
 }
