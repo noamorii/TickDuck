@@ -35,10 +35,6 @@ class MainActivity : AppCompatActivity() {
         TodoViewModel.TodoViewModelFactory(this)
     }
 
-    private val userViewModel: UserViewModel by viewModels {
-        UserViewModel.UserViewModelFactory(this)
-    }
-
     private var areCategoriesLoaded = false
     private var isPictureSet = false
     private lateinit var user: User
@@ -51,7 +47,7 @@ class MainActivity : AppCompatActivity() {
         setNavigationListener()
 
         setNavigationViewMenuListener()
-        user = userViewModel.loggedUser!!
+        user = todoViewModel.loggedUser!!
         loadUser(user)
         loadCategories()
         loadUserData()
@@ -68,7 +64,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        //do nothing
+        moveTaskToBack(true)
     }
 
     private fun setNavigationListener() {

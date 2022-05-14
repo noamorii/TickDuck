@@ -28,6 +28,9 @@ import cz.cvut.fel.pda.tickduck.model.intentDTO.NewTodoDTO
 import cz.cvut.fel.pda.tickduck.utils.CalendarUtils
 import cz.cvut.fel.pda.tickduck.utils.SerializableExtras.NEW_TODO_DTO
 import cz.cvut.fel.pda.tickduck.utils.SerializableExtras.TODO_DETAIL
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import java.time.LocalDate
 
 
@@ -187,9 +190,10 @@ class CalendarFragment : BaseFragment(), TodoAdapter.Listener, CalendarAdapter.O
             CalendarUtils.selectedDay = date
             setMonthView()
 
-            todoAdapter.submitList(searchByDate(date))
+            todoViewModel.getTodosByDate(date).observe(viewLifecycleOwner) {
+                todoAdapter.submitList(it)
+            }
 
-            //var fo  = todoViewModel.getTodosByDate(date.minusMonths(1))
         }
     }
 }
