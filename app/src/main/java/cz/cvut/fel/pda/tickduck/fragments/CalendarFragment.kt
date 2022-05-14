@@ -85,7 +85,7 @@ class CalendarFragment : BaseFragment(), TodoAdapter.Listener, CalendarAdapter.O
         initWidgets()
         setMonthView()
         initRCView()
-        setObserver()
+        setObserver(CalendarUtils.selectedDay)
         setButtonsListener()
     }
 
@@ -96,16 +96,9 @@ class CalendarFragment : BaseFragment(), TodoAdapter.Listener, CalendarAdapter.O
         todoRecyclerView.adapter = todoAdapter
     }
 
-    private fun searchByDate(date: LocalDate): ArrayList<Todo> {
-        val listByDate : ArrayList<Todo> = ArrayList()
-        for (v in todoViewModel.allTodosLiveData.value!!)
-            if (v.date == date.minusMonths(0).toString()) listByDate.add(v)
-        return listByDate
-    }
-
-    private fun setObserver() {
-        todoViewModel.allTodosLiveData.observe(viewLifecycleOwner) {
-            todoAdapter.submitList(searchByDate(CalendarUtils.selectedDay))
+    private fun setObserver(date: LocalDate) {
+        todoViewModel.getTodosByDate(date).observe(viewLifecycleOwner) {
+            todoAdapter.submitList(it)
         }
     }
 
@@ -159,13 +152,15 @@ class CalendarFragment : BaseFragment(), TodoAdapter.Listener, CalendarAdapter.O
 
     private fun previousMonthAction() {
         CalendarUtils.selectedDay = CalendarUtils.selectedDay.minusMonths(1)
-        todoAdapter.submitList(searchByDate(CalendarUtils.selectedDay))
+
+        setObserver(CalendarUtils.selectedDay)
         setMonthView()
     }
 
     private fun nextMonthAction() {
         CalendarUtils.selectedDay = CalendarUtils.selectedDay.plusMonths(1)
-        todoAdapter.submitList(searchByDate(CalendarUtils.selectedDay))
+
+        setObserver(CalendarUtils.selectedDay)
         setMonthView()
     }
 
@@ -185,15 +180,9 @@ class CalendarFragment : BaseFragment(), TodoAdapter.Listener, CalendarAdapter.O
     }
 
     override fun onItemClick(position: Int, date: LocalDate?) {
-        if (date != null) {
-
-            CalendarUtils.selectedDay = date
+        date?.apply {
+            setObserver(date)
             setMonthView()
-
-            todoViewModel.getTodosByDate(date).observe(viewLifecycleOwner) {
-                todoAdapter.submitList(it)
-            }
-
         }
     }
 }
