@@ -30,7 +30,6 @@ import cz.cvut.fel.pda.tickduck.model.User
 import cz.cvut.fel.pda.tickduck.utils.BitmapConverter
 import cz.cvut.fel.pda.tickduck.utils.Vibrations
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 
@@ -47,8 +46,6 @@ class MainActivity : AppCompatActivity(),
     private val categoryViewModel: CategoryViewModel by viewModels {
         CategoryViewModel.CategoryViewModelFactory(this)
     }
-
-    private var areCategoriesLoaded = false
     private var isPictureSet = false
     private lateinit var user: User
 
@@ -252,11 +249,11 @@ class MainActivity : AppCompatActivity(),
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         if (item.toString() == "All categories") {
             TodoFragment.adapter.submitList(todoViewModel.allTodosLiveData.value)
-            findViewById<TextView>(R.id.textView4).text = item.toString()
-            return true
+        } else {
+            TodoFragment.adapter.submitList(searchByCategory(item.toString()))
         }
-        TodoFragment.adapter.submitList(searchByCategory(item.toString()))
         findViewById<TextView>(R.id.textView4).text = item.toString()
+        findViewById<DrawerLayout>(R.id.drawer_layout)?.close()
         return true
     }
 
