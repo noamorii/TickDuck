@@ -63,7 +63,7 @@ class MainActivity : AppCompatActivity(),
         addCategoriesListener()
         loadUserData()
 
-      //  binding.drawerNavView.setNavigationItemSelectedListener(this)
+        binding.drawerNavView.setNavigationItemSelectedListener(this)
     }
 
     private fun loadUser(user: User) {
@@ -278,12 +278,13 @@ class MainActivity : AppCompatActivity(),
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        println(item)
         if (item.toString() == "All categories") {
             TodoFragment.adapter.submitList(todoViewModel.allTodosLiveData.value)
+            findViewById<TextView>(R.id.textView4).text = item.toString()
             return true
         }
         TodoFragment.adapter.submitList(searchByCategory(item.toString()))
+        findViewById<TextView>(R.id.textView4).text = item.toString()
         return true
     }
 

@@ -45,7 +45,6 @@ class TodoFragment : BaseFragment(), TodoAdapter.Listener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
         onEditResult()
         searchFragment = SearchFragment()
         childFragmentManager.beginTransaction().replace(R.id.search, searchFragment).commit()
@@ -66,18 +65,6 @@ class TodoFragment : BaseFragment(), TodoAdapter.Listener {
     ): View {
         binding = RecycleViewFragmentBinding.inflate(inflater, container, false)
         return binding.root
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater) // todo not working
-        inflater.inflate(R.menu.todo_fragment_toolbar_menu, menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-
-        }
-        return false
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

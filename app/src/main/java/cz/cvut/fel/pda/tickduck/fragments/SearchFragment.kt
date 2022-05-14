@@ -8,7 +8,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.activityViewModels
+import com.google.android.material.navigation.NavigationView
+import cz.cvut.fel.pda.tickduck.R
 import cz.cvut.fel.pda.tickduck.adapters.TodoAdapter
 import cz.cvut.fel.pda.tickduck.databinding.FragmentSearchBinding
 import cz.cvut.fel.pda.tickduck.db.viewmodels.TodoViewModel
@@ -36,6 +39,9 @@ class SearchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setSearch()
+        binding.humburger.setOnClickListener {
+            activity?.findViewById<DrawerLayout>(R.id.drawer_layout)?.open()
+        }
     }
 
     fun setAdapter(adapter: TodoAdapter) {

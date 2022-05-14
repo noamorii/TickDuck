@@ -3,22 +3,56 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context=".fragments.SearchFragment"
     android:layout_marginHorizontal="24dp"
-    >
+    tools:context=".fragments.SearchFragment">
 
-    <EditText
-        android:id="@+id/searchTodos"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:layout_marginBottom="16dp"
-        android:background="@drawable/gradient_search"
-        android:hint="@string/search"
-        android:inputType="text"
-        android:paddingStart="16dp"
-        android:paddingTop="8dp"
-        android:paddingBottom="8dp"
-        android:visibility="visible"
-        tools:ignore="RtlSymmetry" />
+        android:layout_height="120dp">
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/humburger"
+            android:layout_alignBottom="@+id/humburger"
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="16dp"
+            android:layout_toEndOf="@+id/humburger"
+            android:gravity="center|right"
+            android:text="Your todos"
+            android:textSize="20sp" />
+
+        <ImageButton
+            android:id="@+id/humburger"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/searchTodos"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="false"
+            android:layout_marginLeft="16dp"
+            android:background="@android:color/transparent"
+            android:src="@drawable/hamburger_icon" />
+
+        <EditText
+            android:id="@+id/searchTodos"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="0dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/gradient_search"
+            android:hint="@string/search"
+            android:inputType="text"
+            android:paddingStart="16dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:visibility="visible"
+            tools:ignore="RtlSymmetry" />
+    </RelativeLayout>
+
 </FrameLayout>
