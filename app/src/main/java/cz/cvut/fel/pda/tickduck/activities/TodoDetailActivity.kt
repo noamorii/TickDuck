@@ -1,5 +1,6 @@
 package cz.cvut.fel.pda.tickduck.activities
 
+import android.icu.text.SimpleDateFormat
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
@@ -9,10 +10,16 @@ import cz.cvut.fel.pda.tickduck.R
 import cz.cvut.fel.pda.tickduck.databinding.ActivityTodoDetailBinding
 import cz.cvut.fel.pda.tickduck.db.viewmodels.CategoryViewModel
 import cz.cvut.fel.pda.tickduck.model.Todo
+import cz.cvut.fel.pda.tickduck.utils.FormatPatterns.DATE_PATTERN
 import cz.cvut.fel.pda.tickduck.utils.SerializableExtras.TODO_DETAIL
 import kotlinx.coroutines.runBlocking
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.*
 
 class TodoDetailActivity : AppCompatActivity() {
+
+    private val dateTimeDateFormatter = DateTimeFormatter.ofPattern(DATE_PATTERN)
     private var todo: Todo? = null
     private lateinit var binding: ActivityTodoDetailBinding
 
@@ -54,11 +61,14 @@ class TodoDetailActivity : AppCompatActivity() {
             runBlocking {
                 todoCategory.text = categoryViewModel.getById(todo!!.categoryId)?.name
             }
-            if (todo!!.date != "null") {
-                TodoDate.text = todo?.date
+
+            todo?.apply {
+                date?.apply {
+                    TodoDate.text = LocalDate.parse(this).format(dateTimeDateFormatter)
+                }
+                TodoDescription.text = description
+                TodoName.text = name
             }
-            TodoDescription.text = todo?.description
-            TodoName.text = todo?.name
         }
     }
 }

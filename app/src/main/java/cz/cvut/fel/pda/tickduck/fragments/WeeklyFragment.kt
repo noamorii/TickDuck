@@ -25,7 +25,7 @@ import cz.cvut.fel.pda.tickduck.db.viewmodels.TodoViewModel
 import cz.cvut.fel.pda.tickduck.model.Todo
 import cz.cvut.fel.pda.tickduck.model.intentDTO.NewTodoDTO
 import cz.cvut.fel.pda.tickduck.utils.CalendarUtils
-import cz.cvut.fel.pda.tickduck.utils.CalendarUtils.Companion.monthYearFromDate
+import cz.cvut.fel.pda.tickduck.utils.CalendarUtils.monthYearFromDate
 import cz.cvut.fel.pda.tickduck.utils.SerializableExtras
 import cz.cvut.fel.pda.tickduck.utils.SerializableExtras.TODO_DETAIL
 import java.time.LocalDate

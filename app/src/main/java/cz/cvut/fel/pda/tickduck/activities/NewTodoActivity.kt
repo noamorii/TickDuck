@@ -1,11 +1,10 @@
 package cz.cvut.fel.pda.tickduck.activities
 
 import android.app.DatePickerDialog
-import android.app.TimePickerDialog
-import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.ArrayAdapter
@@ -19,19 +18,15 @@ import cz.cvut.fel.pda.tickduck.db.viewmodels.CategoryViewModel
 import cz.cvut.fel.pda.tickduck.model.Category
 import cz.cvut.fel.pda.tickduck.model.enums.FlagType
 import cz.cvut.fel.pda.tickduck.model.intentDTO.NewTodoDTO
+import cz.cvut.fel.pda.tickduck.utils.FormatPatterns.DATE_PATTERN
 import cz.cvut.fel.pda.tickduck.utils.SerializableExtras.NEW_TODO_DTO
 import cz.cvut.fel.pda.tickduck.utils.Vibrations
 import java.text.SimpleDateFormat
 import java.time.LocalDate
-import java.time.LocalTime
 import java.util.*
 
 
 class NewTodoActivity : AppCompatActivity() {
-
-    companion object {
-        private const val DATE_PATTERN = "dd.MM.yyyy"
-    }
 
     private val categoryViewModel: CategoryViewModel by viewModels {
         CategoryViewModel.CategoryViewModelFactory(this)
@@ -87,7 +82,7 @@ class NewTodoActivity : AppCompatActivity() {
                 name = binding.edTask.text.toString(),
                 description = binding.edDescription.text.toString(),
                 flagInfo = FlagType.BLUE,
-                date = localDate.toString(),
+                date = localDate?.toString(),
                 idCategory = (binding.edCategory.selectedItem as CategoryWrapper).category.id!!
                 )
             )
@@ -133,7 +128,7 @@ class NewTodoActivity : AppCompatActivity() {
             updateLabel(DATE_PATTERN)
             localDate = LocalDate.of(
                 calendar[Calendar.YEAR],
-                calendar[Calendar.MONTH],
+                calendar[Calendar.MONTH] + 1,
                 calendar[Calendar.DAY_OF_MONTH]
             )
         }
