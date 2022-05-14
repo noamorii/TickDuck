@@ -51,7 +51,7 @@ class TodoViewModel(
             description = newTodoDTO.description,
             date = newTodoDTO.date,
             userId = loggedInUserId,
-            flagInfo = newTodoDTO.flagInfo,
+            priorityEnum = newTodoDTO.priorityEnum,
             categoryId = newTodoDTO.idCategory
         )
         todoRepository.insert(newTodo)

@@ -11,18 +11,18 @@ data class Todo(
     @PrimaryKey (autoGenerate = true)
     val id: Int? = null,
 
-    val name: String,
+    var name: String,
 
-    val description: String,
+    var description: String,
 
-    val date: String?,
+    var date: String?,
 
     val userId: Int,
 
-    @ColumnInfo(name = "flag_type")
-    val flagInfo: PriorityEnum,
+    @ColumnInfo(name = "priority_enum")
+    var priorityEnum: PriorityEnum,
 
-    val categoryId: Int,
+    var categoryId: Int,
 
     @ColumnInfo(name = "is_completed")
     var isCompleted: Boolean = false

@@ -7,6 +7,6 @@ data class NewTodoDTO(
     val name: String,
     val description: String,
     val date: String?,
-    val flagInfo: PriorityEnum,
+    val priorityEnum: PriorityEnum,
     val idCategory: Int
 ) : Serializable

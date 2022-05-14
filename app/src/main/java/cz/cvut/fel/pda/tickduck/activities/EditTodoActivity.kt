@@ -3,38 +3,40 @@ package cz.cvut.fel.pda.tickduck.activities
 import android.app.DatePickerDialog
 import android.content.Intent
 import android.graphics.Color
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import cz.cvut.fel.pda.tickduck.R
 import cz.cvut.fel.pda.tickduck.databinding.ActivityNewTodoBinding
-import cz.cvut.fel.pda.tickduck.db.viewmodels.CategoryViewModel
-import cz.cvut.fel.pda.tickduck.model.Category
+import cz.cvut.fel.pda.tickduck.db.viewmodels.TodoViewModel
+import cz.cvut.fel.pda.tickduck.model.Todo
 import cz.cvut.fel.pda.tickduck.model.enums.PriorityEnum
 import cz.cvut.fel.pda.tickduck.model.intentDTO.NewTodoDTO
-import cz.cvut.fel.pda.tickduck.utils.FormatPatterns.DATE_PATTERN
-import cz.cvut.fel.pda.tickduck.utils.SerializableExtras.NEW_TODO_DTO
+import cz.cvut.fel.pda.tickduck.utils.FormatPatterns
+import cz.cvut.fel.pda.tickduck.utils.SerializableExtras
 import cz.cvut.fel.pda.tickduck.utils.Vibrations
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.util.*
 
+class EditTodoActivity : AppCompatActivity() {
 
-class NewTodoActivity : AppCompatActivity() {
-
-    private val categoryViewModel: CategoryViewModel by viewModels {
-        CategoryViewModel.CategoryViewModelFactory(this)
+    private val todoViewModel: TodoViewModel by viewModels {
+        TodoViewModel.TodoViewModelFactory(this)
     }
 
     private lateinit var binding: ActivityNewTodoBinding
 
+    private val calendar = Calendar.getInstance()
     private var localDate: LocalDate? = null
-    private var priority: PriorityEnum = PriorityEnum.MEDIUM
+    private var todo: Todo? = null
+    private var priority: PriorityEnum? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,11 +44,11 @@ class NewTodoActivity : AppCompatActivity() {
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar.root)
         supportActionBar?.title = "Create new todo"
-        supportActionBar?.setDisplayHomeAsUpEnabled(true) //back
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
+        initData()
         initCategorySpinner()
         initCalendar()
-        setPriority()
         setButtonClearListener()
         setButtonPriorityListener()
     }
@@ -59,6 +61,8 @@ class NewTodoActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.id_create) {
             if (validate()) {
+                setToTodoEntity()
+                todoViewModel.updateTodo(todo!!)
                 setResult()
                 finish()
             }
@@ -70,64 +74,82 @@ class NewTodoActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
+    private fun initData() {
+        todo = intent.getSerializableExtra(SerializableExtras.TODO_DETAIL) as Todo
+
+        todo?.apply {
+            priority = priorityEnum
+            setPriority()
+
+            binding.edTask.setText(name)
+
+            date?.apply {
+                localDate = LocalDate.parse(date)
+                localDate?.apply {
+                    calendar[Calendar.YEAR] = year
+                    calendar[Calendar.MONTH] = monthValue - 1
+                    calendar[Calendar.DAY_OF_MONTH] = dayOfMonth
+                    updateLabel()
+                }
+            }
+        }
+    }
+
     private fun validate(): Boolean {
         return if (binding.edTask.text.toString() == "") {
-            Toast.makeText(this@NewTodoActivity, "Title cannot be empty.", Toast.LENGTH_SHORT).show()
-            Vibrations.vibrate(this@NewTodoActivity)
+            Toast.makeText(this@EditTodoActivity, "Title cannot be empty.", Toast.LENGTH_SHORT).show()
+            Vibrations.vibrate(this@EditTodoActivity)
             false
         } else true
     }
 
+    private fun setToTodoEntity() {
+        todo?.apply {
+            name = binding.edTask.text.toString()
+            description = binding.edDescription.text.toString()
+            priorityEnum = priority!!
+            date = localDate?.toString()
+            categoryId = (binding.edCategory.selectedItem as NewTodoActivity.CategoryWrapper).category.id!!
+        }
+
+    }
+
     private fun setResult() {
         val intent = Intent().apply {
-            putExtra(NEW_TODO_DTO, NewTodoDTO(
-                name = binding.edTask.text.toString(),
-                description = binding.edDescription.text.toString(),
-                priorityEnum = priority,
-                date = localDate?.toString(),
-                idCategory = (binding.edCategory.selectedItem as CategoryWrapper).category.id!!
-                )
-            )
+            putExtra(
+                SerializableExtras.TODO_DETAIL, todo!!)
         }
         setResult(RESULT_OK, intent)
     }
 
     private fun initCategorySpinner() {
-        val categoryList = mutableListOf<CategoryWrapper>()
+        val categoryList = mutableListOf<NewTodoActivity.CategoryWrapper>()
         val adapter = ArrayAdapter(
-            this@NewTodoActivity,
+            this@EditTodoActivity,
             android.R.layout.simple_spinner_dropdown_item,
             categoryList
         )
         binding.edCategory.adapter = adapter
 
-        categoryViewModel.categoriesLiveData.observe(this) {
+        todoViewModel.allCategoriesLiveData.observe(this) {
             it.forEach { cat ->
-                categoryList.add(CategoryWrapper(cat))
+                categoryList.add(NewTodoActivity.CategoryWrapper(cat))
             }
             adapter.notifyDataSetChanged()
+
+            categoryList.forEach { catWrap ->
+                if (todo!!.categoryId == catWrap.category.id) {
+                    binding.edCategory.setSelection(adapter.getPosition(catWrap))
+                    return@forEach
+                }
+            }
         }
     }
 
     private fun initCalendar() {
-        val edDateField = binding.edDate
-        val clearButton = binding.clearDateButton
-        val calendar = Calendar.getInstance()
-
-        val updateLabel = { pattern: String ->
-            edDateField.setText(
-                SimpleDateFormat(pattern, Locale.ENGLISH)
-                    .format(calendar.time)
-            )
-            clearButton.apply {
-                setTextColor(Color.WHITE)
-                isClickable = true
-            }
-        }
-
         val dateSetListener = DatePickerDialog.OnDateSetListener { _, year, month, day ->
             calendar.set(year, month, day)
-            updateLabel(DATE_PATTERN)
+            updateLabel()
             localDate = LocalDate.of(
                 calendar[Calendar.YEAR],
                 calendar[Calendar.MONTH] + 1,
@@ -135,7 +157,7 @@ class NewTodoActivity : AppCompatActivity() {
             )
         }
 
-        edDateField.setOnClickListener {
+        binding.edDate.setOnClickListener {
             DatePickerDialog(this,
                 dateSetListener,
                 calendar[Calendar.YEAR],
@@ -145,11 +167,22 @@ class NewTodoActivity : AppCompatActivity() {
         }
     }
 
+    private fun updateLabel() {
+        binding.edDate.setText(
+            SimpleDateFormat(FormatPatterns.DATE_PATTERN, Locale.ENGLISH).format(calendar.time)
+        )
+
+        binding.clearDateButton.apply {
+            setTextColor(Color.WHITE)
+            isClickable = true
+        }
+    }
+
     private fun setButtonClearListener() {
         binding.clearDateButton.setOnClickListener {
             binding.edDate.text.clear()
             binding.clearDateButton.apply {
-                setTextColor(ContextCompat.getColor(this@NewTodoActivity, R.color.cardview_dark_background))
+                setTextColor(ContextCompat.getColor(this@EditTodoActivity, R.color.cardview_dark_background))
                 isClickable = false
             }
             localDate = null
@@ -157,40 +190,15 @@ class NewTodoActivity : AppCompatActivity() {
     }
 
     private fun setButtonPriorityListener() {
-
         binding.priorityButton.setOnClickListener {
-                
-            }
-        }
-    
-    private fun setPriority() {
-        binding.priorityButton.apply {
-            text = priority.text
-            setTextColor(priority.toArgb(this@NewTodoActivity))
+            // todo
         }
     }
 
-    class CategoryWrapper(
-        val category: Category
-    ) {
-        override fun toString(): String {
-            return category.name
+    private fun setPriority() {
+        binding.priorityButton.apply {
+            text = todo!!.priorityEnum.text
+            setTextColor(todo!!.priorityEnum.toArgb(this@EditTodoActivity))
         }
-
-        override fun equals(other: Any?): Boolean {
-            if (this === other) return true
-            if (javaClass != other?.javaClass) return false
-
-            other as CategoryWrapper
-
-            if (category != other.category) return false
-
-            return true
-        }
-
-        override fun hashCode(): Int {
-            return category.hashCode()
-        }
-
     }
 }

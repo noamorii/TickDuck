@@ -29,7 +29,7 @@ class TodoAdapter(
         fun setData(task: Todo, listener: Listener) = with(binding) {
             taskTitle.text = task.name
             taskCheckbox.isChecked = task.isCompleted
-            taskCheckbox.buttonTintList = ColorStateList.valueOf(task.flagInfo.toArgb(root.context))
+            taskCheckbox.buttonTintList = ColorStateList.valueOf(task.priorityEnum.toArgb(root.context))
             taskCheckbox.setOnClickListener {
                 listener.onClickCheckbox(task.copy(isCompleted = taskCheckbox.isChecked))
             }
