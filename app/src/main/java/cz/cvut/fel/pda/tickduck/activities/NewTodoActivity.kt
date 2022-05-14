@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -19,6 +20,7 @@ import cz.cvut.fel.pda.tickduck.model.Category
 import cz.cvut.fel.pda.tickduck.model.enums.FlagType
 import cz.cvut.fel.pda.tickduck.model.intentDTO.NewTodoDTO
 import cz.cvut.fel.pda.tickduck.utils.SerializableExtras.NEW_TODO_DTO
+import cz.cvut.fel.pda.tickduck.utils.Vibrations
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.LocalTime
@@ -59,8 +61,10 @@ class NewTodoActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.id_create) {
-            setResult()
-            finish()
+            if (validate()) {
+                setResult()
+                finish()
+            }
         }
 
         if (item.itemId == android.R.id.home) {
@@ -68,6 +72,14 @@ class NewTodoActivity : AppCompatActivity() {
             //back
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun validate(): Boolean {
+        return if (binding.edTask.text.toString() == "") {
+            Toast.makeText(this@NewTodoActivity, "Title cannot be empty.", Toast.LENGTH_SHORT).show()
+            Vibrations.vibrate(this@NewTodoActivity)
+            false
+        } else true
     }
 
     private fun setResult() {
