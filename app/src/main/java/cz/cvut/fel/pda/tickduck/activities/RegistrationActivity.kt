@@ -74,9 +74,7 @@ class RegistrationActivity : AppCompatActivity() {
                         if (foundUser == null && password1.text.toString() != password2.text.toString()) {
                             this@RegistrationActivity.runOnUiThread {
                                 Toast.makeText(this@RegistrationActivity, "Passwords need to be equal.", Toast.LENGTH_SHORT).show()
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                                    Vibrations.vibrate(this@RegistrationActivity)
-                                }
+                                Vibrations.vibrate(this@RegistrationActivity)
                             }
                         } else if (foundUser == null) {
 
@@ -95,18 +93,14 @@ class RegistrationActivity : AppCompatActivity() {
                         } else {
                             this@RegistrationActivity.runOnUiThread {
                                 Toast.makeText(this@RegistrationActivity, "Username already exist.", Toast.LENGTH_SHORT).show()
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                                    Vibrations.vibrate(this@RegistrationActivity)
-                                }
+                                Vibrations.vibrate(this@RegistrationActivity)
                             }
                         }
                     }
                 }
             } else {
                 Toast.makeText(this@RegistrationActivity, "Please enter all fields.", Toast.LENGTH_SHORT).show()
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                    Vibrations.vibrate(this@RegistrationActivity)
-                }
+                Vibrations.vibrate(this@RegistrationActivity)
             }
         }
     }

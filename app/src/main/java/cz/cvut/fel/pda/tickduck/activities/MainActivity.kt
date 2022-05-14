@@ -118,9 +118,7 @@ class MainActivity : AppCompatActivity() {
                 dialog.dismiss()
             } else {
                 Toast.makeText(this, "Category \"$name\" already exists.", Toast.LENGTH_SHORT).show()
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                    Vibrations.vibrate(this)
-                }
+                Vibrations.vibrate(this)
             }
         }
     }

@@ -85,9 +85,7 @@ class SettingsFragment : BaseFragment() {
                 takeAnImage()
             } else {
                 Toast.makeText(requireActivity(), "Camera permissions are required.", Toast.LENGTH_SHORT).show()
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                    Vibrations.vibrate(this@SettingsFragment.requireContext())
-                }
+                Vibrations.vibrate(this@SettingsFragment.requireContext())
             }
         }
 
@@ -100,6 +98,7 @@ class SettingsFragment : BaseFragment() {
                     val image = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                         ImageDecoder.decodeBitmap(ImageDecoder.createSource(requireContext().contentResolver, dataUri))
                     } else {
+                        @Suppress("DEPRECATION")
                         MediaStore.Images.Media.getBitmap(requireContext().contentResolver, dataUri)
                     }
                     saveAndLoadProfilePicture(image)
@@ -112,9 +111,7 @@ class SettingsFragment : BaseFragment() {
                 browseAnImage()
             } else {
                 Toast.makeText(requireActivity(), "Storage reading permissions are required.", Toast.LENGTH_SHORT).show()
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                    Vibrations.vibrate(this@SettingsFragment.requireContext())
-                }
+                Vibrations.vibrate(this@SettingsFragment.requireContext())
             }
         }
     }
@@ -198,7 +195,7 @@ class SettingsFragment : BaseFragment() {
     }
 
     private suspend fun saveAndLoadProfilePicture(picture: Bitmap) {
-        withContext(Dispatchers.Main) {
+        withContext(Dispatchers.IO) {
             userViewModel.loggedUser!!.profilePicture = BitmapConverter.convert(picture)
             userViewModel.updateUser()
             loadUserProfileImage()

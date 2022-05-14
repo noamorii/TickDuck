@@ -89,18 +89,14 @@ class LoginActivity : AppCompatActivity() {
                         } else {
                             this@LoginActivity.runOnUiThread {
                                 Toast.makeText(this@LoginActivity, "Invalid login.", Toast.LENGTH_SHORT).show()
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                                    Vibrations.vibrate(this@LoginActivity)
-                                }
+                                Vibrations.vibrate(this@LoginActivity)
                             }
                         }
                     }
                 }
             } else {
                 Toast.makeText(this@LoginActivity, "Please enter all fields.", Toast.LENGTH_SHORT).show()
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                    Vibrations.vibrate(this@LoginActivity)
-                }
+                Vibrations.vibrate(this@LoginActivity)
             }
         }
     }
