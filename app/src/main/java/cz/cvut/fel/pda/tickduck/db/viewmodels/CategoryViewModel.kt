@@ -29,6 +29,10 @@ class CategoryViewModel(
         return categoryRepository.getById(id)
     }
 
+    suspend fun getByName(name: String): Category? {
+        return categoryRepository.getByName(name)
+    }
+
     fun insert(categoryName: String) = viewModelScope.launch {
         val newCategory = Category(userId = loggedInUserId, name = categoryName)
         categoryRepository.insert(newCategory)

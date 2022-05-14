@@ -32,11 +32,11 @@ class TodoFragment : BaseFragment(), TodoAdapter.Listener {
     companion object {
         @JvmStatic
         fun newInstance() = TodoFragment()
+        lateinit var adapter: TodoAdapter
     }
 
     private lateinit var binding: RecycleViewFragmentBinding
     private lateinit var editLauncher: ActivityResultLauncher<Intent>
-    private lateinit var adapter: TodoAdapter
     private lateinit var searchFragment: SearchFragment
 
     private val todoViewModel: TodoViewModel by activityViewModels {

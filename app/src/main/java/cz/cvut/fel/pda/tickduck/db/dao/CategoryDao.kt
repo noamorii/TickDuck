@@ -26,4 +26,6 @@ interface CategoryDao {
     @Query("SELECT * FROM categories WHERE id = :id")
     suspend fun getById(id: Int): Category?
 
+    @Query("SELECT * FROM categories WHERE name = :name")
+    suspend fun getByName(name: String): Category?
 }
