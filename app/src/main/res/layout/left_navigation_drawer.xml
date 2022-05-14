@@ -43,10 +43,10 @@
                 android:layout_height="wrap_content"
                 android:text="@string/create_new_category"
                 android:textAlignment="viewStart"
-                android:textColor="#00C2FF"
+                android:textColor="@color/main_color"
                 app:icon="@drawable/blue_add_24"
                 app:iconSize="36dp"
-                app:iconTint="#00C2FF" />
+                app:iconTint="@color/main_color" />
 
         </LinearLayout>
 

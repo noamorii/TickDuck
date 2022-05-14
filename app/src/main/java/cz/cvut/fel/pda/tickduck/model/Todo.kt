@@ -3,10 +3,8 @@ package cz.cvut.fel.pda.tickduck.model
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import cz.cvut.fel.pda.tickduck.model.enums.FlagType
+import cz.cvut.fel.pda.tickduck.model.enums.PriorityEnum
 import java.io.Serializable
-import java.time.LocalDate
-import java.time.LocalTime
 
 @Entity (tableName = "Todos")
 data class Todo(
@@ -22,7 +20,7 @@ data class Todo(
     val userId: Int,
 
     @ColumnInfo(name = "flag_type")
-    val flagInfo: FlagType,
+    val flagInfo: PriorityEnum,
 
     val categoryId: Int,
 

@@ -1,5 +1,6 @@
 package cz.cvut.fel.pda.tickduck.adapters
 
+import android.content.res.ColorStateList
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,6 +29,7 @@ class TodoAdapter(
         fun setData(task: Todo, listener: Listener) = with(binding) {
             taskTitle.text = task.name
             taskCheckbox.isChecked = task.isCompleted
+            taskCheckbox.buttonTintList = ColorStateList.valueOf(task.flagInfo.toArgb(root.context))
             taskCheckbox.setOnClickListener {
                 listener.onClickCheckbox(task.copy(isCompleted = taskCheckbox.isChecked))
             }

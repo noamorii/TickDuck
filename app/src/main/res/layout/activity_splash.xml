@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:minHeight="48dp"
         android:text="@string/splash_welcome"
-        android:textColor="#00C2FF"
+        android:textColor="@color/main_color"
         android:textSize="48sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"

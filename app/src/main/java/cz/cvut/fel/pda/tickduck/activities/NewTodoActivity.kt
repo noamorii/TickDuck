@@ -4,7 +4,6 @@ import android.app.DatePickerDialog
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.ArrayAdapter
@@ -16,7 +15,7 @@ import cz.cvut.fel.pda.tickduck.R
 import cz.cvut.fel.pda.tickduck.databinding.ActivityNewTodoBinding
 import cz.cvut.fel.pda.tickduck.db.viewmodels.CategoryViewModel
 import cz.cvut.fel.pda.tickduck.model.Category
-import cz.cvut.fel.pda.tickduck.model.enums.FlagType
+import cz.cvut.fel.pda.tickduck.model.enums.PriorityEnum
 import cz.cvut.fel.pda.tickduck.model.intentDTO.NewTodoDTO
 import cz.cvut.fel.pda.tickduck.utils.FormatPatterns.DATE_PATTERN
 import cz.cvut.fel.pda.tickduck.utils.SerializableExtras.NEW_TODO_DTO
@@ -35,6 +34,7 @@ class NewTodoActivity : AppCompatActivity() {
     private lateinit var binding: ActivityNewTodoBinding
 
     private var localDate: LocalDate? = null
+    private var priority: PriorityEnum = PriorityEnum.MEDIUM
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,7 +46,9 @@ class NewTodoActivity : AppCompatActivity() {
 
         initCategorySpinner()
         initCalendar()
+        setPriority()
         setButtonClearListener()
+        setButtonPriorityListener()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -81,7 +83,7 @@ class NewTodoActivity : AppCompatActivity() {
             putExtra(NEW_TODO_DTO, NewTodoDTO(
                 name = binding.edTask.text.toString(),
                 description = binding.edDescription.text.toString(),
-                flagInfo = FlagType.BLUE,
+                flagInfo = priority,
                 date = localDate?.toString(),
                 idCategory = (binding.edCategory.selectedItem as CategoryWrapper).category.id!!
                 )
@@ -151,6 +153,20 @@ class NewTodoActivity : AppCompatActivity() {
                 isClickable = false
             }
             localDate = null
+        }
+    }
+
+    private fun setButtonPriorityListener() {
+
+        binding.priorityButton.setOnClickListener {
+                
+            }
+        }
+    
+    private fun setPriority() {
+        binding.priorityButton.apply {
+            text = priority.text
+            setTextColor(priority.toArgb(this@NewTodoActivity))
         }
     }
 
