@@ -14,6 +14,9 @@ interface CategoryDao {
     @Query("SELECT * FROM Categories WHERE userId = :userId ORDER BY clickCounter DESC")
     fun getAllCategoriesFlow(userId: Int): Flow<List<Category>>
 
+    @Query("SELECT * FROM Categories WHERE userId = :userId ORDER BY clickCounter DESC")
+    suspend fun getAllCategories(userId: Int): List<Category>
+
     @Query("SELECT EXISTS(SELECT * FROM categories WHERE name = :name)")
     fun existsByName(name : String) : Boolean
 

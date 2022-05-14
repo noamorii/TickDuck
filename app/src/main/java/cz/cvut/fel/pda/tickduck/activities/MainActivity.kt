@@ -25,12 +25,14 @@ import cz.cvut.fel.pda.tickduck.fragments.CalendarFragment
 import cz.cvut.fel.pda.tickduck.fragments.FragmentManager
 import cz.cvut.fel.pda.tickduck.fragments.SettingsFragment
 import cz.cvut.fel.pda.tickduck.fragments.TodoFragment
-import cz.cvut.fel.pda.tickduck.model.Category
 import cz.cvut.fel.pda.tickduck.model.Todo
 import cz.cvut.fel.pda.tickduck.model.User
 import cz.cvut.fel.pda.tickduck.utils.BitmapConverter
 import cz.cvut.fel.pda.tickduck.utils.Vibrations
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 
 
 class MainActivity : AppCompatActivity(),
@@ -60,7 +62,7 @@ class MainActivity : AppCompatActivity(),
         setNavigationViewMenuListener()
         user = todoViewModel.loggedUser!!
         loadUser(user)
-        addCategoriesListener()
+        loadCategories()
         loadUserData()
 
       //  binding.drawerNavView.setNavigationItemSelectedListener(this)
@@ -114,67 +116,46 @@ class MainActivity : AppCompatActivity(),
 
     private fun setNavigationViewMenuListener() {
         binding.deleteCategory.setOnClickListener {
-
-            val categoryList = mutableListOf<String>("Choose a category...")
-            for (v in todoViewModel.allCategoriesLiveData.value!!)
-                categoryList.add(v.name)
-
             val view: View = layoutInflater.inflate(R.layout.dialog_spinner, null)
+
+            val categoryList = mutableListOf<NewTodoActivity.CategoryWrapper>()
             val spinner = view.findViewById<Spinner>(R.id.spinner)
-            val adapter = ArrayAdapter(this,
-                android.R.layout.simple_spinner_item,
-                categoryList)
+            val adapter = ArrayAdapter(
+                this@MainActivity,
+                android.R.layout.simple_spinner_dropdown_item,
+                categoryList
+            )
+            spinner.adapter = adapter
+
+            categoryViewModel.categoriesLiveData.observe(this) {
+                it.forEach { cat ->
+                    if (cat.name != "Inbox") categoryList.add(NewTodoActivity.CategoryWrapper(cat))
+                }
+                adapter.notifyDataSetChanged()
+            }
 
             AlertDialog.Builder(this, R.style.MyDialogTheme)
-                .setTitle("Choose category to delete")
+                .setTitle("Choose category to delete. Also todos will be deleted.")
                 .setPositiveButton("Delete") { p0, p1 ->
-                    if (spinner.selectedItem != "Choose a category...") {
-                        runBlocking {
-                            val catId = categoryViewModel.getByName(spinner.selectedItem.toString())?.id
-                            if (catId != null) {
-                                categoryViewModel.delete(catId)
-                                changeNavigationDrawerContent()
-                              //  binding.drawerLayout.closeDrawer(binding.drawerLayout)
-                            }
-                        }
+                    val toDelete = spinner.selectedItem as NewTodoActivity.CategoryWrapper
+                    if (toDelete.category.name != "Inbox") {
+                        todoViewModel.deleteCategory(toDelete.category.id!!)
+                        binding.drawerNavView.menu.removeItem(toDelete.category.id)
+                    } else {
+                        Toast.makeText(this@MainActivity, "Category \"Inbox\" cannot be deleted.", Toast.LENGTH_SHORT).show()
                     }
+
                 }
-                .setNegativeButton("Cancel") { p0, p1 ->
-                    p0?.dismiss() }
+                .setNegativeButton("Cancel") { p0, p1 -> p0?.dismiss() }
                 .setView(view)
                 .create()
                 .show()
-
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_item)
-            spinner.adapter = adapter
         }
         binding.drawerCreateCategoryButton.setOnClickListener {
             showDialog()
         }
     }
 
-    private fun changeNavigationDrawerContent() {
-
-        binding.drawerNavView.menu.clear()
-        todoViewModel.allCategoriesLiveData.observe(this@MainActivity){
-            //val categories = todoViewModel.allCategoriesLiveData.value
-//            if (categories != null) {
-//                for (category: Category in categories) {
-//                    binding.drawerNavView.menu.add(category.name)
-//                }
-//            }
-            it.forEach { cat ->
-                binding.drawerNavView.menu.add(cat.name)
-            }
-
-        }
-
-
-
-
-//        areCategoriesLoaded = false
-//        addCategoriesListener()
-    }
 
     private fun showDialog() {
         val dialog = Dialog(this)
@@ -209,18 +190,33 @@ class MainActivity : AppCompatActivity(),
     }
 
     private fun setListenerOnCreateButton(dialog: Dialog) {
-        val createButton: ImageButton = dialog.findViewById(R.id.create_category_button)
-        createButton.setOnClickListener {
+        dialog.findViewById<ImageButton>(R.id.create_category_button).setOnClickListener {
             val nameField = dialog.findViewById<EditText?>(R.id.newCategoryName)
             val name: String = nameField.text.toString()
 
-            if (!todoViewModel.categoryExists(name)) {
-                todoViewModel.insertCategory(name)
-                binding.drawerNavView.menu.add(name)
-                dialog.dismiss()
-            } else {
-                Toast.makeText(this, "Category \"$name\" already exists.", Toast.LENGTH_SHORT).show()
-                Vibrations.vibrate(this)
+            runBlocking {
+                withContext(Dispatchers.IO) {
+                    if (name == "") {
+                        this@MainActivity.runOnUiThread {
+                            Toast.makeText(this@MainActivity, "Cannot add empty category name.", Toast.LENGTH_SHORT).show()
+                            Vibrations.vibrate(this@MainActivity)
+                        }
+                    } else if (categoryViewModel.getByName(name) == null) {
+                        todoViewModel.insertCategory(name)
+                        val persistedCat = categoryViewModel.getByName(name)
+                        this@MainActivity.runOnUiThread {
+                            persistedCat?.apply {
+                                binding.drawerNavView.menu.add(Menu.NONE, this.id!!, Menu.NONE, this.name)
+                            }
+                        }
+                        dialog.dismiss()
+                    } else {
+                        this@MainActivity.runOnUiThread {
+                            Toast.makeText(this@MainActivity, "Category \"$name\" already exists.", Toast.LENGTH_SHORT).show()
+                            Vibrations.vibrate(this@MainActivity)
+                        }
+                    }
+                }
             }
         }
     }
@@ -243,38 +239,14 @@ class MainActivity : AppCompatActivity(),
         })
     }
 
-    private fun loadCategories(): Boolean {
-
-        todoViewModel.allCategoriesLiveData.observe(this@MainActivity){}
-        if (!areCategoriesLoaded) {
-            val categories = todoViewModel.allCategoriesLiveData.value
-            if (categories != null) {
-                for (category: Category in categories) {
-                    binding.drawerNavView.menu.add(category.name)
+    private fun loadCategories() {
+        runBlocking {
+            withContext(Dispatchers.IO) {
+                categoryViewModel.getAll().forEach {
+                    binding.drawerNavView.menu.add(Menu.NONE, it.id!!, Menu.NONE, it.name)
                 }
-                if (binding.drawerNavView.menu.size() > 1) {
-                    areCategoriesLoaded = true
-                    return true
-                } else {
-                    return false
-                }
-            } else {
-                return false
             }
-        } else {
-            return true
         }
-    }
-
-    private fun addCategoriesListener() {
-        binding.drawerLayout.addDrawerListener(object : DrawerLayout.DrawerListener {
-            override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
-                if (loadCategories()) binding.drawerLayout.removeDrawerListener(this)
-            }
-            override fun onDrawerOpened(drawerView: View) {}
-            override fun onDrawerStateChanged(newState: Int) {}
-            override fun onDrawerClosed(drawerView: View) {}
-        })
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {

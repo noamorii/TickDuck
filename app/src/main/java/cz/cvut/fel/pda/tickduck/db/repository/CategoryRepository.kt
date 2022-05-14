@@ -11,8 +11,13 @@ class CategoryRepository(
     private val categoryDao: CategoryDao
 ) {
 
-    fun getAll(userId: Int): Flow<List<Category>> {
+    fun getAllFlow(userId: Int): Flow<List<Category>> {
         return categoryDao.getAllCategoriesFlow(userId)
+    }
+
+    @WorkerThread
+    suspend fun getAll(userId: Int): List<Category> {
+        return categoryDao.getAllCategories(userId)
     }
 
     @WorkerThread

@@ -28,7 +28,7 @@ class TodoViewModel(
 
     private val loggedInUserId = loggedInSharedPreferences.getInt(CURRENT_USER_ID, 0)
 
-    val allCategoriesLiveData = categoryRepository.getAll(loggedInUserId).asLiveData()
+    val allCategoriesLiveData = categoryRepository.getAllFlow(loggedInUserId).asLiveData()
     val allTodosLiveData = todoRepository.getAll(loggedInUserId).asLiveData()
 
     var loggedUser: User? = null
@@ -65,7 +65,7 @@ class TodoViewModel(
         todoRepository.delete(id)
     }
 
-    fun insertCategory(categoryName: String) = viewModelScope.launch {
+    suspend fun insertCategory(categoryName: String) {
         val newCategory = Category(userId = loggedInUserId, name = categoryName)
         categoryRepository.insert(newCategory)
     }
@@ -73,11 +73,6 @@ class TodoViewModel(
     fun deleteCategory(categoryId: Int) = viewModelScope.launch {
         categoryRepository.delete(categoryId)
         todoRepository.deleteByCategoryId(categoryId)
-    }
-
-    fun categoryExists(name: String): Boolean {
-        return allCategoriesLiveData.value?.map { it.name }!!
-            .contains(name)
     }
 
     class TodoViewModelFactory(

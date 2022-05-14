@@ -45,7 +45,7 @@ class EditTodoActivity : AppCompatActivity() {
         binding = ActivityNewTodoBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar.root)
-        supportActionBar?.title = "Create new todo"
+        supportActionBar?.title = "Edit todo"
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         initData()
