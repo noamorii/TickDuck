@@ -23,7 +23,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 
-
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var sp: SharedPreferences

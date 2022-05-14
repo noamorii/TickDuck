@@ -9,31 +9,40 @@ import android.os.*
 import android.util.Log
 import android.view.*
 import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
-import android.widget.ImageButton
-import android.widget.Toast
+import android.widget.*
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.fragment.app.activityViewModels
 import cz.cvut.fel.pda.tickduck.R
 import cz.cvut.fel.pda.tickduck.databinding.LeftNavigationDrawerBinding
 import cz.cvut.fel.pda.tickduck.db.viewmodels.TodoViewModel
+import cz.cvut.fel.pda.tickduck.db.viewmodels.UserViewModel
 import cz.cvut.fel.pda.tickduck.fragments.CalendarFragment
 import cz.cvut.fel.pda.tickduck.fragments.FragmentManager
 import cz.cvut.fel.pda.tickduck.fragments.SettingsFragment
 import cz.cvut.fel.pda.tickduck.fragments.TodoFragment
 import cz.cvut.fel.pda.tickduck.model.Category
+import cz.cvut.fel.pda.tickduck.model.User
+import cz.cvut.fel.pda.tickduck.utils.BitmapConverter
 import cz.cvut.fel.pda.tickduck.utils.Vibrations
 
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: LeftNavigationDrawerBinding
+
     private val todoViewModel: TodoViewModel by viewModels {
         TodoViewModel.TodoViewModelFactory(this)
     }
 
+    private val userViewModel: UserViewModel by viewModels {
+        UserViewModel.UserViewModelFactory(this)
+    }
+
     private var areCategoriesLoaded = false
+    private var isPictureSet = false
+    private lateinit var user: User
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,8 +50,22 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         FragmentManager.setFragment(TodoFragment.newInstance(), this)
         setNavigationListener()
-        loadCategories()
+
         setNavigationViewMenuListener()
+        user = userViewModel.loggedUser!!
+        loadUser(user)
+        loadCategories()
+        loadUserData()
+    }
+
+    private fun loadUser(user: User) {
+        binding.drawerNavView.getHeaderView(0).findViewById<TextView>(R.id.textView).text = user.username
+        if (user.profilePicture != null)
+            user.profilePicture.apply {
+                binding.drawerNavView.getHeaderView(0).findViewById<ImageView>(R.id.imageView)
+                    .setImageBitmap(this?.let { BitmapConverter.convert(it) })
+                isPictureSet = true
+            }
     }
 
     override fun onBackPressed() {
@@ -127,10 +150,29 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun loadUserData() {
+        binding.drawerLayout.addDrawerListener(object : DrawerLayout.DrawerListener {
+            override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
+                if (!isPictureSet && user.profilePicture != null) {
+                    user.profilePicture.apply {
+                        binding.drawerNavView.getHeaderView(0).findViewById<ImageView>(R.id.imageView)
+                            .setImageBitmap(this?.let { BitmapConverter.convert(it) })
+                        isPictureSet = true
+                    }
+                    binding.drawerLayout.removeDrawerListener(this)
+                }
+            }
+            override fun onDrawerOpened(drawerView: View) {}
+            override fun onDrawerClosed(drawerView: View) {}
+            override fun onDrawerStateChanged(newState: Int) {}
+        })
+    }
+
     private fun loadCategories() {
         binding.drawerLayout.addDrawerListener(object : DrawerLayout.DrawerListener {
             override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
                 todoViewModel.allCategoriesLiveData.observe(this@MainActivity){}
+
                 if (!areCategoriesLoaded) {
                     val categories = todoViewModel.allCategoriesLiveData.value
                     if (categories != null) {
