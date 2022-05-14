@@ -181,6 +181,7 @@ class CalendarFragment : BaseFragment(), TodoAdapter.Listener, CalendarAdapter.O
 
     override fun onItemClick(position: Int, date: LocalDate?) {
         date?.apply {
+            CalendarUtils.selectedDay = date
             setObserver(date)
             setMonthView()
         }
