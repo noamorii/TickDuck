@@ -4,12 +4,14 @@ import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.DialogInterface
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.ArrayAdapter
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import cz.cvut.fel.pda.tickduck.R
 import cz.cvut.fel.pda.tickduck.databinding.ActivityNewTodoBinding
 import cz.cvut.fel.pda.tickduck.db.viewmodels.CategoryViewModel
@@ -47,6 +49,7 @@ class NewTodoActivity : AppCompatActivity() {
 
         initCategorySpinner()
         initCalendar()
+        setButtonClearListener()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -100,6 +103,7 @@ class NewTodoActivity : AppCompatActivity() {
 
     private fun initCalendar() {
         val edDateField = binding.edDate
+        val clearButton = binding.clearDateButton
         val calendar = Calendar.getInstance()
 
         val updateLabel = { pattern: String ->
@@ -107,6 +111,10 @@ class NewTodoActivity : AppCompatActivity() {
                 SimpleDateFormat(pattern, Locale.ENGLISH)
                     .format(calendar.time)
             )
+            clearButton.apply {
+                setTextColor(Color.WHITE)
+                isClickable = true
+            }
         }
 
         val dateSetListener = DatePickerDialog.OnDateSetListener { _, year, month, day ->
@@ -126,6 +134,17 @@ class NewTodoActivity : AppCompatActivity() {
                 calendar[Calendar.MONTH],
                 calendar[Calendar.DAY_OF_MONTH]
             ).show()
+        }
+    }
+
+    private fun setButtonClearListener() {
+        binding.clearDateButton.setOnClickListener {
+            binding.edDate.text.clear()
+            binding.clearDateButton.apply {
+                setTextColor(ContextCompat.getColor(this@NewTodoActivity, R.color.cardview_dark_background))
+                isClickable = false
+            }
+            localDate = null
         }
     }
 
