@@ -232,11 +232,11 @@ class SettingsFragment : BaseFragment() {
 
     private fun loadUserProfileImage() {
         userViewModel.loggedUser!!.profilePicture?.apply {
-            binding.profilePicture.setImageBitmap(BitmapConverter.convert(this))
-            activity?.findViewById<NavigationView>(R.id.drawer_nav_view)
-                ?.getHeaderView(0)
-                ?.findViewById<ImageView>(R.id.imageView)
-                ?.setImageBitmap(BitmapConverter.convert(this))
+            BitmapConverter.convert(this).apply {
+                binding.profilePicture.setImageBitmap(this)
+                activity?.findViewById<NavigationView>(R.id.drawer_nav_view)?.getHeaderView(0)
+                    ?.findViewById<ImageView>(R.id.imageView)?.setImageBitmap(this)
+            }
         }
     }
 }
