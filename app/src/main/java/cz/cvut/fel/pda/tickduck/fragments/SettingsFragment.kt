@@ -20,11 +20,13 @@ import android.provider.MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI
 import android.util.Log
 import android.view.*
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
+import com.google.android.material.navigation.NavigationView
 import cz.cvut.fel.pda.tickduck.R
 import cz.cvut.fel.pda.tickduck.activities.LoginActivity
 import cz.cvut.fel.pda.tickduck.databinding.FragmentSettingsBinding
@@ -231,6 +233,10 @@ class SettingsFragment : BaseFragment() {
     private fun loadUserProfileImage() {
         userViewModel.loggedUser!!.profilePicture?.apply {
             binding.profilePicture.setImageBitmap(BitmapConverter.convert(this))
+            activity?.findViewById<NavigationView>(R.id.drawer_nav_view)
+                ?.getHeaderView(0)
+                ?.findViewById<ImageView>(R.id.imageView)
+                ?.setImageBitmap(BitmapConverter.convert(this))
         }
     }
 }
