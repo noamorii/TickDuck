@@ -84,14 +84,17 @@ class MainActivity : AppCompatActivity(),
             when (it.itemId) {
                 R.id.settings -> {
                     setFabColor(R.color.fab_disable)
+                    findViewById<DrawerLayout>(R.id.drawer_layout)?.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
                     FragmentManager.setFragment(SettingsFragment(), this)
                 }
                 R.id.calendar -> {
                     setFabColor(R.color.main_color)
+                    findViewById<DrawerLayout>(R.id.drawer_layout)?.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
                     FragmentManager.setFragment(CalendarFragment.newInstance(), this)
                 }
                 R.id.todayTodos -> {
                     setFabColor(R.color.main_color)
+                    findViewById<DrawerLayout>(R.id.drawer_layout)?.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
                     if (FragmentManager.currentFragment !is TodoFragment) {
                         FragmentManager.setFragment(TodoFragment.newInstance(), this)
                     }

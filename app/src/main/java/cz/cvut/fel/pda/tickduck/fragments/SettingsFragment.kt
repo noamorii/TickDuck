@@ -27,7 +27,6 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import cz.cvut.fel.pda.tickduck.R
 import cz.cvut.fel.pda.tickduck.activities.LoginActivity
-import cz.cvut.fel.pda.tickduck.activities.NewTodoActivity
 import cz.cvut.fel.pda.tickduck.databinding.FragmentSettingsBinding
 import cz.cvut.fel.pda.tickduck.db.viewmodels.TodoViewModel
 import cz.cvut.fel.pda.tickduck.db.viewmodels.UserViewModel
